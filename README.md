@@ -17,25 +17,33 @@ Hands-on examples and best practices.
 What's next..
 
 Contents:
-Chapter-1 -----	Introduction to Containerization.		 5mins read
-Chapter-2 -----	Overview of Docker.				10mins read
+Chapter-1 -----	Introduction to Containerization.
+
+Chapter-2 -----	Overview of Docker.
+
 	2.1---- Why Docker
 	2.2---- Docker,Inc.
 	2.3---- The Docker technology
 	2.3.1-- The Container Runtime
 	2.3.2-- The Docker Daemon
 	2.3.3-- The Orchestrator (Docker swarm) 
-Chapter-3 -----	Docker components Deep dive.			20mins read
+	
+Chapter-3 -----	Docker components Deep dive.
+
 	3.1---- Open Container Initiative
 	3.2---- Docker Engine
 	3.3---- Docker Images
 	3.4---- Docker Containers
 	3.5---- Docker Volumes
 	3.6---- Docker Networks
-Chapter-4 -----	Installing docker 			 	5mins inst
+	
+Chapter-4 -----	Installing docker 	
+
 	4.1---- Installing docker on linux
 	4.2---- Installing docker on Mac/Windows
-Chapter-5 -----	Hands-on with docker 				lab session 	
+	
+Chapter-5 -----	Hands-on with docker 		
+
 	5.1---- Hello world with container
 	5.1.1-- Docker workflow with docker-cli
 	5.2---- Building your first image		
@@ -43,10 +51,14 @@ Chapter-5 -----	Hands-on with docker 				lab session
 	5.2.3-- Building your own image
 	5.2.4-- Pushing your images
 	5.3---- Running your container
-Chapter-6 ----- Multi-containers with docker-compose		lab session
+	
+Chapter-6 ----- Multi-containers with docker-compose
+
 	6.1---- docker-compose.yaml
 	6.2---- Packaging your app with docker-compose
-Chapter-7 ----- Lets get REAL 					lab session
+	
+Chapter-7 ----- Lets get REAL 				
+
 	7.1---- Build your own real-world docker application 
 
 
