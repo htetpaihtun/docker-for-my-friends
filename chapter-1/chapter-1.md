@@ -1,16 +1,12 @@
-Hello. In this chapter we will start our first step into application containerization journey.
+#### Hello. In this chapter we will start our first step into application containerization journey. I will try to explain how containers came in, in the first place.
 
-I will try to explain how containers came in, in the first place.
-
-Disclaimer:
-
+**Disclaimer:**
 Since I only got into IT industry in early 2016-2017, I had no clue about what the industry was like before.
-
 So, below statements are my impression on earlier days and what I've read about earlier days and therefore not my own experience. 
-
 Anyway, these are what I was told. 
 
-Let's get started with a story uhm.. I mean history ye.. uhmm... ok whatever you'd like to call.
+
+**Let's get started with a story uhm.. I mean history ye.. uhmm... ok whatever you'd like to call.**
 
 Back to the earlier days in software development industry,they could only run one application per server as Operating Systems (mostly Linux,Windows) weren't mature enough to implement way to reliably run multiple applications on same server.
 
@@ -44,7 +40,6 @@ These wouldn't be possible with such great community support.
 
 Thanks to the indivials and organizations participated and of course Docker itself. 
 
-What a time to be a  --human--  developer.
+What a time to be alive. 
 
-
-In later chapter, we will go further into Docker and what makes them so special.
+#### In later chapter, we will go further into Docker and what makes them so special.
