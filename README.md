@@ -1,25 +1,37 @@
 # docker-for-my-friends
 Teaching docker to my friends. (:
 
-Hello this is "INTRODUCTION TO DOCKER FOR MY FRIENDS". :) 
+<p> Hello this is "INTRODUCTION TO DOCKER FOR MY FRIENDS". :) 
+
 This is my take on docker after learning containerization technology for a year so I may not be very experienced and "all knowing" around docker but hey, here's my 8 cents for those people like me who wants to learn docker from absolute beginner perspective. :)
+
 Also I will add some additional information about best practices, my own practices and things to aware while getting started (as I learn throught) for using docker to its potential.
 This course will cover all you need to know and all you might want to know as a complete stranger to containerizationtechnology and yeah, of course, Docker.
 Enjoy.. 
 
-In this course, we will learn:
+In this course, you will learn :
+
 Overview of Containerization technologies and the evolution of software virtaulization.
+
 Architecture and concepts of Docker.
+
 Installing docker.
+
 How to build,run and maintain images and containers.
+
 Running multi-containers with Docker-compose. 
+
 Hands-on examples and best practices.
-What's next..
 
-Contents:
-Chapter-1 -----	Introduction to Containerization.
+What's next.. </p>
 
-Chapter-2 -----	Overview of Docker.
+
+<h2> Contents: </h2>
+
+
+<h2> Chapter-1 -----	Introduction to Containerization. </h2>
+
+<h2> Chapter-2 -----	Overview of Docker. </h2>
 
 	2.1---- Why Docker
 	2.2---- Docker,Inc.
