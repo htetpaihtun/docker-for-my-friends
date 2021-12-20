@@ -57,7 +57,8 @@ _Figure 2.3.1 docker architecture overview_
 ### 2.3.1 The Container Runtime 
 The runtime operates at the lowest level and is responsible for managing containers such as starting and stopping. 
 This may raise some questions about what is container runtime at its core.
-We will get to them in Docker Engine section in next Chapter. 
+We will get to them in [next Chapter](../chapter-3). 
+
 For now, you can assume them as little rooms in OS that can run your application.
 So, Docker runtime is the one making room (space/environment) for your code to run.
 Docker implements this runtime in multi-layered architecture which includes: 
@@ -70,33 +71,8 @@ containerd (high-level runtime) and runc (low-level runtime).
 The Docker daemon is the service that runs on your host operating system that control lower level runtime.
 This is the core of the Docker engine and the place where we ask to create containers for our needs. 
 It receives our instructions to Docker via docker-cli and acts as the brain of Docker. 
-It mainly implements:
-Remote API that we use to mange with our containers.
-Internal networking where containers can interact between them or with the host.
-Volumes where our data live and mount points within host.
-Images mangaement (pulling, building, managing and pushing).
-You can communicate with your docker daemon with following commands;
+We will get into details in [later chapter](../chapter-3/README.md#332-docker-daemon). 
 
-On linux:
-   ````
-   systemctl status docker 
-   ````
-On Mac:
-   ````
-   launchctl status docker
-   ````
-   
-On any system with docker installed:
-   ````
-   dockerd help 
-   ````
-
-*We don't normally communicate with Docker daemon this way. This is rather for debugging and advanced configuration purpose. We do it via docker-cli.*
-
-![docker daemon](http://blog.itaysk.com/images/2018-02-06-the-hitchhickers-guide-to-the-container-galaxy_2.png)
-
-  _Figure 2.3.2 docker daemon_
-  
 ---
 
 ### 2.3.3 The Orchestrator (Docker swarm) 
