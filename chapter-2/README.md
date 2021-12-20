@@ -21,11 +21,15 @@ You just need to manage them from high level control pane and not to mess with d
 
 Nowsaday, in cloud-native enviorments, almost every application runs with containers since they are small, mobile, easy to set up, easy to manage.
 
+---
+
 ### 2.2 The Docker, Inc. 
 Docker, Inc. is a San Francisco based technology company founded by French-born American developer and entrepreneur Solomon Hykes.
 The company started out as PaaS provider called dotCloud.
 DotCloud is a product built on Linux containers and the team built an in-house tool nick-named "Docker" and that was the origin of what we know as Docker today. 
 Later, they abandoned PaaS side and the team worked hard to bring that technology into mainstream IT and spoiler-alert "they successed!". 
+
+---
 
 ### 2.3 The Docker Technology
 Docker is software that creates, manages and even orchestrates containers. 
@@ -48,6 +52,7 @@ There are 3 main components which make part of the Docker:
 _Figure 2.3.1 docker architecture overview_
 
 
+---
 
 ### 2.3.1 The Container Runtime 
 The runtime operates at the lowest level and is responsible for managing containers such as starting and stopping. 
@@ -57,6 +62,8 @@ For now, you can assume them as little rooms in OS that can run your application
 So, Docker runtime is the one making room (space/environment) for your code to run.
 Docker implements this runtime in multi-layered architecture which includes: 
 containerd (high-level runtime) and runc (low-level runtime).
+
+---
 
 ### 2.3.2 The Docker Daemon
 
@@ -89,11 +96,15 @@ On any system with docker installed:
 ![docker daemon](http://blog.itaysk.com/images/2018-02-06-the-hitchhickers-guide-to-the-container-galaxy_2.png)
 
   _Figure 2.3.2 docker daemon_
+  
+---
 
 ### 2.3.3 The Orchestrator (Docker swarm) 
 
 Docker also provides with the service where we can make many nodes to work together on top of Docker.
 Docker swarm eases that cooperation between many machines via network connection and it provides internal scheduling of the containers.
+
+---
 
 ### *Personal take*
 
@@ -116,9 +127,19 @@ As container orchestration technologies like Kubernetes are becoming more powerf
 
 Since part of the Docker(Docker-CE) is an open-source, you can find learning resources very easily.
 
+---
+
 ### *Free Learning resources*
 
 - A beginner lab to learn fundamentals: https://dockerlabs.collabnix.com/
 - Interactive learning playground: https://www.docker.com/play-with-docker/
 - Interactive web-based lab: https://www.katacoda.com/courses/docker/
+ 
+Special mentions:
+- Recommendations from [kubernetes-Myanmar](https://blog.k8smm.org/) blog: https://blog.k8smm.org/tyro/gsc/ 
+- FOSS Myanmar: 
+  - https://github.com/fossmyanmar/docker-quick-start
+  - https://devops-myanmar.gitbook.io/docker-quick-start/09-docker-network
+
+---
 
