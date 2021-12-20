@@ -8,21 +8,21 @@ Anyway, these are what I was told.
 
 **Let's get started with a story uhm.. I mean history ye.. uhmm... ok whatever you'd like to call.**
 
-Back to the earlier days in software development industry,they could only run one application per server as Operating Systems (mostly Linux,Windows) weren't mature enough to implement way to reliably run multiple applications on same server.
+Back to the earlier days in software development industry, they could only run one application per server as Operating Systems (mostly Linux, Windows) weren't mature enough to implement way to reliably run multiple applications on same server.
 
-If a company demand a new application,they had to buy extra hardwares for server first and then installed OS stuff and did configuration on them.
+If a company demand a new application, they had to buy extra hardwares for server first and then installed OS stuff and did configuration on them.
 
 It was horrible to do them plus both requirement and resource management on per server basis and application basis.
 
-Then, Virtual Machines technologies came in and now they could host many applications on single server.
+Then, Virtual Machines technologies came in and now they could host many applications on a single server.
 
-VMs can separate a server into little blocks of servers with their own OS and hardware according to your needs.
+VMs can separate a server into little blocks of servers with their own OS and hardware space (virutally) according to your needs.
 
 Now everyone's happy.
 
 Things got better but could they be even more BETTER.?
 
-VMs are not perfect, they require their own OS along with the cost to maintain them, their own hardware limitations,they are slow to boot, lack of portability and more..
+VMs are not perfect, they require their own OS (along with the cost to maintain them), their own hardware limitations,they are slow to boot, lack of portability and more..
 
 Here's come our main hero,containers. 
 
