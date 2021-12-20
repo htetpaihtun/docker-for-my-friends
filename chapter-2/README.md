@@ -114,7 +114,9 @@ As container orchestration technologies like Kubernetes are becoming more powerf
 
 Since part of the Docker(Docker-CE) is an open-source, you can find learning resources very easily.
 
-### *Learning resources*
+### *Free Learning resources*
 
-Cool lab: https://dockerlabs.collabnix.com/
+- A beginner lab to learn fundamentals: https://dockerlabs.collabnix.com/
+- Interactive learning playground: https://www.docker.com/play-with-docker/
+- Interactive web-based lab: https://www.katacoda.com/courses/docker/
 
