@@ -181,6 +181,45 @@ Like real engines, the Docker engine is modular in design and built from many sm
 based on open standards such as those maintained by the Open Container Initiative (OCI).         
 Docker underwent many design changes over the years to achieve what we had today.
 
+---
+
+### 3.3.1 Docker Client 
+
+The Docker client `docker` is the primary way that many Docker users interact with Docker. When you use commands such as  `docker run` , the client sends these commands to dockerd, which carries them out.
+
+---
+
+### 3.3.2 Docker Daemon
+
+The Docker daemon (dockerd) listens for Docker API requests and manages Docker objects such as images, containers, networks, and volumes.
+It mainly implements:
+Remote API that we use to mange with our containers.
+Internal networking where containers can interact between them or with the host.
+Volumes where our data live and mount points within host.
+Images mangaement (pulling, building, managing and pushing).
+You can communicate with your docker daemon with following commands;
+
+On linux:
+   ````
+   systemctl status docker 
+   ````
+On Mac:
+   ````
+   launchctl status docker
+   ````
+   
+On any system with docker installed:
+   ````
+   dockerd help 
+   ````
+
+*We don't normally communicate with Docker daemon this way. This is rather for debugging and advanced configuration purpose. We do it via docker-cli.*
+
+![docker daemon](http://blog.itaysk.com/images/2018-02-06-the-hitchhickers-guide-to-the-container-galaxy_2.png)
+
+  _Figure 2.3.2 docker daemon_
+  
+
 Initially, Docker daemon is the one making all the jobs around Docker and thus leading to monolithic nature of Docker. 
 This monolithic feature of Docker daemon becomes problematic because: 
 - It's hard to innovate on
@@ -198,6 +237,14 @@ The major components that make up the Docker engine are the Docker daemon, conta
 ![docker_oci](https://user-images.githubusercontent.com/47061262/146834416-c754c05d-634b-4f0f-895d-3c6c076b4943.png)
 
  *Figure 3.3.2 Docker workflow overview*
+
+Let's meet our new components.
+
+---
+
+### 3.3.1 Containerd 
+
+
 
 
 
