@@ -178,8 +178,22 @@ The Docker engine is the core of the Docker that runs and manages Docker contain
  *Figure 3.3.1 Docker engine overview*
 
 Like real engines, the Docker engine is modular in design and built from many small specialised tools. Where possible, these are
-based on open standards such as those maintained by the Open Container Initiative (OCI).                             
-The major components that make up the Docker engine are the Docker daemon, containerd, runc and other networking and storage plugins.
+based on open standards such as those maintained by the Open Container Initiative (OCI).         
+Docker underwent many design changes over the years to achieve what we had today.
+
+Initially, Docker daemon is the one making all the jobs around Docker and thus leading to monolithic nature of Docker. 
+This monolithic feature of Docker daemon becomes problematic because: 
+- It's hard to innovate on
+- It got slower
+- It wasn't what ecosystem wanted
+
+So, Docker, Inc. had to tear this docker daemon apart to shift workloads away from daemon as much as possible and modularize into smaller specialised tools.
+These specialized tools can be swapped out, as well as easily re-used by third parties to build other tools.
+
+>*This plan follows the tried-and-tested Unix philosophy of building
+small specialized tools that can be pieced together into larger tools
+The major components that make up the Docker engine are the Docker daemon, containerd, runc and other networking and storage plugins.*
+
 
 ![docker_oci](https://user-images.githubusercontent.com/47061262/146834416-c754c05d-634b-4f0f-895d-3c6c076b4943.png)
 
