@@ -41,13 +41,15 @@ What's next..
 	2.3.3-- The Orchestrator (Docker swarm) 
 	
 ## Chapter 3  	Docker components Deep dive.
-
-	3.1---- Open Container Initiative
-	3.2---- Docker Engine
-	3.3---- Docker Images
-	3.4---- Docker Containers
-	3.5---- Docker Volumes
-	3.6---- Docker Networks
+	3.1---- What is a Linux Container
+	3.1.1-- Namespaces
+	3.1.2-- Cgroups (Control Groups)
+	3.2---- Open Container Initiative
+	3.3---- Docker Engine
+	3.4---- Docker Images
+	3.5---- Docker Containers
+	3.6---- Docker Volumes
+	3.7---- Docker Networks
 	
 ## Chapter 4 	Installing docker 	
 
