@@ -4,20 +4,20 @@ Before we start to look at Docker components. Let's learn about what actually is
 
 ### 3.1 What is a Linux container 
 
-As I mentioned before, in earlier years, Docker directly uses [Linux containers (LXC)](https://linuxcontainers.org/) as its runtime and then later dropped it.    
- So, let's take a look at LXC before.
+As I mentioned before, in earlier years, Docker directly uses [Linux containers (LXC)](https://linuxcontainers.org/) as its runtime and then later dropped it.        
+ So, let's take a look it LXC before.
 
 ![LXC architecture](https://www.baeldung.com/wp-content/uploads/sites/2/2020/11/Linux-Container-Architecture-1.jpg)
 
-  _Figure 3.1.1 LXC architecture_
-
+  _Figure 3.1.2 LXC architecture_
 
 A Linux container, at its core, is made up of; 
 - Namespaces
 - Cgroups (Control groups) 
 - Other Kernel capabilities 
 
-#### Namespaces
+---
+#### 3.1.1 Namespaces
 
 - Namespaces tell processes **what they can see**.
  
@@ -42,7 +42,8 @@ example output:
 ````
 _Following outputs are parent namespaces started when booting with systemd._
 
-#### Cgroups (Control Groups)
+---
+#### 3.1.2 Cgroups (Control Groups)
 
 - Cgroups tell processes **what they can use**.
 
@@ -92,10 +93,13 @@ Outputs may look like this:
   │ └─1032 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
   ...
 ````
+---
 
-*If you want to learn more about Cgroups Redhat has
+#### *Further Reading*
+
+If you want to learn more about Cgroups Redhat has
 [documentation on how to manage resources on RHEL7 Linux](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/resource_management_guide/index)
-(but the concept is same for Linux distros).*
+(but the concept is same for Linux distros).
 
 I also recommend this [super cool video](https://www.youtube.com/watch?v=sK5i-N34im8) (54mins) from Jérôme Petazzoni @PyCon 2016 
 
@@ -105,6 +109,81 @@ If you like this, you can also check out
 
 [This one "Building a container from scratch in Go"](https://www.youtube.com/watch?v=Utf-A4rODH8) (20mins) is from Liz Rice 
 where she demonstrated a bare container from scratch with GoLang.
+
+---
+
+Now, we know what a Linux container is all about.             
+And I also mentioned about Docker dropping LXC from its core, why and how?
+
+> First up, LXC is Linux-specific. It is was a problem for a project that had aspirations of being multi-platform.
+  Second up, being reliant on an external tool for something so core to the project was a huge risk that could hinder
+  development.
+  As a result, Docker. Inc. developed their own tool called libcontainer as a replacement for LXC. The goal of
+  libcontainer was to be a platform-agnostic tool that provided Docker with access to the fundamental container
+  building-blocks that exist in the host kernel.
+  Libcontainer replaced LXC as the default execution driver in Docker 0.9.
+
+A quotation from Nigel Poulton's [Docker Deep Dive](https://www.amazon.com/Docker-Deep-Dive-Nigel-Poulton/dp/1521822808)
+ 
+![dockerwithlxc](https://user-images.githubusercontent.com/47061262/146825434-3d214b14-d1cb-405f-b915-f7cd66929683.png)
+ _Figure 3.1.1 docker implmentation with libcontainer and LXC underneath_
+ 
+Omg! There are even more components there but hey, don't worry, these are just extra study I did because I think it is awesome. 
+You won't need to know about these underlying layers just to start working with Docker which we will be doing later.
+But in order to master it, these concepts and components are worth taking your time and hey, it is cool to be a nerd about it.  
+
+After this section, you might as well be confused about this LXC and Docker things. 
+So, I will sum up with this diagram. 
+You don't need to know about Podman at all but think I will mention it in later episodes or chapters but for now you just need to know that
+[Podman](https://podman.io/) is popular docker alternative from [RedHat org](https://www.redhat.com/). 
+
+![LXC-docker-podman](https://user-images.githubusercontent.com/47061262/146827193-c7d68883-90d5-455e-ac48-4ba1979063b2.png)
+
+ *Figure 3.1.4 most popular available containerization solutions*
+
+---
+
+### 3.2 Open Container Initiative
+
+When talking about Docker and containers, **Open Container Initiative (OCI)** also play important part throughout the history of containers.
+
+The *Open Container Initiative* is an open governance structure 
+for the express purpose of creating open industry standards around container formats and runtimes.
+
+The Open Container Initiative (OCI) is a lightweight, open governance structure (project), formed under the auspices of the Linux Foundation, for the express purpose of creating open industry standards around container formats and runtime. The OCI was launched on June 22nd 2015 by Docker, CoreOS and other leaders in the container industry.
+
+The OCI currently contains two specifications: the Runtime Specification (runtime-spec) and the Image Specification (image-spec). 
+- Runtime-spec outlines how a container run time should look like. 
+(note: Docker's container runtime "[runC](https://www.docker.com/blog/runc/)" is actual implementation of runtime-spec and is donated to OCI)
+- Image-spec outlines how to a container image should look like.
+
+_for full information, you can visit https://opencontainers.org/about/overview/_
+
+---
+
+#### 3.3 Docker Engine 
+
+The Docker engine is the core of the Docker that runs and manages Docker containers and images.
+
+> **Docker Engine** is an open source containerization technology for building and containerizing your applications. 
+ Docker Engine acts as a client-server application with:   
+> - A server with a long-running daemon process dockerd.
+> - APIs which specify interfaces that programs can use to talk to and instruct the Docker daemon.
+> - A command line interface (CLI) client docker.
+
+*[Official Docker Engine Docs](https://docs.docker.com/engine/)*
+
+![docker-engine](https://user-images.githubusercontent.com/47061262/146833772-bf336eba-6658-4b37-90c9-9dba4479229b.png)
+
+ *Figure 3.3.1 Docker engine overview*
+
+Like real engines, the Docker engine is modular in design and built from many small specialised tools. Where possible, these are
+based on open standards such as those maintained by the Open Container Initiative (OCI).                             
+The major components that make up the Docker engine are the Docker daemon, containerd, runc and other networking and storage plugins.
+
+![docker_oci](https://user-images.githubusercontent.com/47061262/146834416-c754c05d-634b-4f0f-895d-3c6c076b4943.png)
+
+ *Figure 3.3.2 Docker workflow overview*
 
 
 
