@@ -43,19 +43,20 @@ There are 3 main components which make part of the Docker:
   3. The Orchrestrator
 
    <!--tmp image-->
-![docker architecture overview](https://www.docker.com/blog/wp-content/uploads/2018/11/DockerEngineDiagram-1.png)
+![docker architecture overview](https://user-images.githubusercontent.com/47061262/146831921-a3f119bf-fe61-47b1-9165-32859d6be327.png)
 
 _Figure 2.3.1 docker architecture overview_
-          
+
+
 
 ### 2.3.1 The Container Runtime 
 The runtime operates at the lowest level and is responsible for managing containers such as starting and stopping. 
 This may raise some questions about what is container runtime at its core.
 We will get to them in Docker Engine section in next Chapter. 
 For now, you can assume them as little rooms in OS that can run your application.
-So, Docker runtime is the one making room(space/environment) for your code to run.
+So, Docker runtime is the one making room (space/environment) for your code to run.
 Docker implements this runtime in multi-layered architecture which includes: 
-containerd(high-level runtime) and runc(low-level runtime).
+containerd (high-level runtime) and runc (low-level runtime).
 
 ### 2.3.2 The Docker Daemon
 
