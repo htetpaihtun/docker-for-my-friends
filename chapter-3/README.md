@@ -189,6 +189,14 @@ The Docker client `docker` is the primary way that many Docker users interact wi
 
 ---
 
+### 3.3.2 Docker Engine API 
+
+Docker provides an RESTful API for interacting with the Docker daemon (the Docker Engine API), as well as SDKs for Go and Python. 
+The SDKs allow you to build and scale Docker apps and solutions quickly and easily. 
+If Go or Python don’t work for you, you can use the Docker Engine API directly via `wget` or `curl`, or the HTTP library which is part of most modern programming languages.
+*For more information about SDKs, visits: https://docs.docker.com/engine/api/sdk/*
+
+
 ### 3.3.2 Docker Daemon
 
 The Docker daemon (dockerd) listens for Docker API requests and manages Docker objects such as images, containers, networks, and volumes.
@@ -244,8 +252,11 @@ Let's meet our new components.
 
 ### 3.3.1 Containerd 
 
+**[Containerd](https://containerd.io/)** is an industry-standard container runtime with an emphasis on simplicity, robustness and portability.
+Containerd is available as a daemon for Linux and Windows. It manages the complete container lifecycle of its host system, from image transfer and storage to container execution and supervision to low-level storage to network attachments and beyond.
 
-
+Getting started with Containerd? 
+https://containerd.io/docs/getting-started/
 
 
 
