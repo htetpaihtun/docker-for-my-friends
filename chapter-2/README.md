@@ -1,4 +1,4 @@
-In this chapter, you will learn background of Docker.Inc and your brief answers to your very first questions about Docker starting with why Docker, what Docker, how Docker and more.
+#### In this chapter, you will learn background of Docker.Inc and your brief answers to your very first questions about Docker starting with why Docker, what Docker, how Docker and more.
 
 ### 2.1 Why Docker
 > Docker is here and there’s no point hiding. In fact, if you want the best jobs working on the best technologies,
