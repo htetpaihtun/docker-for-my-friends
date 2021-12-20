@@ -42,4 +42,12 @@ Thanks to the indivials and organizations participated and of course Docker itse
 
 What a time to be alive. 
 
+![type1 hypervisors and type2 hypervisors](http://www.techplayon.com/wp-content/uploads/2020/08/hypervisor.png)
+
+_Figure 1.1 Type 1 Hypervisor and Type 2 hypervisor_
+
+![difference between docker and vm](https://vmarena.com/wp-content/uploads/2018/08/DOCK02.png)
+
+_Figure 1.2 Docker comparison over VMs_
+
 #### In later chapter, we will go further into Docker and what makes them so special.
