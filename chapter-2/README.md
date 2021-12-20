@@ -44,7 +44,8 @@ There are 3 main components which make part of the Docker:
 
    <!--tmp image-->
 ![docker architecture overview](https://www.docker.com/blog/wp-content/uploads/2018/11/DockerEngineDiagram-1.png)
-          figure 2.3.1 docker architecture overview
+
+_Figure 2.3.1 docker architecture overview_
           
 
 ### 2.3.1 The Container Runtime 
@@ -86,7 +87,7 @@ On any system with docker installed:
 
 ![docker daemon](http://blog.itaysk.com/images/2018-02-06-the-hitchhickers-guide-to-the-container-galaxy_2.png)
 
-   figure 2.3.2 docker daemon
+  _Figure 2.3.2 docker daemon_
 
 ### 2.3.3 The Orchestrator (Docker swarm) 
 
