@@ -197,7 +197,7 @@ If Go or Python don’t work for you, you can use the Docker Engine API directly
 *For more information about SDKs, visits: https://docs.docker.com/engine/api/sdk/*
 
 
-### 3.3.2 Docker Daemon
+### 3.3.3 Docker Daemon
 
 The Docker daemon (dockerd) listens for Docker API requests and manages Docker objects such as images, containers, networks, and volumes.
 It mainly implements:
@@ -250,13 +250,33 @@ Let's meet our new components.
 
 ---
 
-### 3.3.1 Containerd 
+### 3.3.4 Containerd 
 
 **[Containerd](https://containerd.io/)** is an industry-standard container runtime with an emphasis on simplicity, robustness and portability.
 Containerd is available as a daemon for Linux and Windows. It manages the complete container lifecycle of its host system, from image transfer and storage to container execution and supervision to low-level storage to network attachments and beyond.
 
+Containerd is the high level runtime used on top of runC in Docker (and many other projects).
+It is responsible for making containers and managing them. 
+It achieves this via two steps;     
+- recive instruction to create containers 
+- instruct runC to create container 
+
 Getting started with Containerd? 
 https://containerd.io/docs/getting-started/
 
+---
+
+### 3.3.5 runC and shim 
+
+**runC** is a lightweight, portable container runtime which implements OCI-runtime standard.
+It includes all of the plumbing code used by Docker to interact with system features related to containers. 
+In docker, it is the thing that actually creates your containers with instructions from containerd.
+runC is just here to create containers and after this, it exits and shim become container's parent process.
+
+runC is the implementation of OCI-runtime and is donated to [CNCF](https://www.cncf.io/) by Docker. 
+
+**shim(docker shim)**
+
+--- 
 
 
