@@ -836,12 +836,30 @@ You can see that only unless-stopped-nginx has been restarted.
 
 ---
 
+### 4.6 Docker Volumes
+
+Stateful applications that persist data are becoming more and more important in the world of cloud-native and microservices applications.
+
+Docker container gets its own non-persistent storage. 
+This is automatically created for every container and is tightly coupled to the lifecycle of the container.
+
+Docker containers are, in fact, ephermeral and **immutable**, meaning they can easily be started, deleted, replaced and replicated.
+They do not persist its data beyond its lifetime.
+
+So, if needed, containers need to persist the application's data elsewhere. 
+This is where volumes came in. 
+Volumes are separate objects that have their lifecycles decoupled from containers. 
+This means you can create and manage volumes independently, and they’re not tied to the lifecycle of any container. 
+Net result, you can delete a container that’s using a volume, and the volume won’t be deleted.
+
+Let's get started. 
 
 
+---
+### 4.6 Docker Netowrks
 
 
-
-
+ELP
 
 
 
