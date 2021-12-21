@@ -465,8 +465,58 @@ This indicates there are 7 layers in the images. So, what are image layers?
 ### 4.4.3 Images Layers
 
 A Docker image is just a bunch of loosely-connected read-only layers, with each layer comprising one or more
-files.
+files. 
 
 ![docker image layers](https://user-images.githubusercontent.com/47061262/146947646-690a8c83-a4bd-43dd-b517-f34db0ba1723.png)
+
+ *Figure 4.4.1 Docker Image Layering* 
+
+`docker history` command is another way of inspecting an image and seeing layer data. However, it shows
+the build history of an image and is not a strict list of layers in the final image. For example, some Dockerfile
+instructions (“ENV”, “EXPOSE”, “CMD”, and “ENTRYPOINT”) add metadata to the image and do not result in
+permanent layers being created.
+All Docker images start with a base layer, and as changes are made and new content is added, new layers are
+added on top.
+
+You can also get more information about images and layers with command; 
+````
+docker history golang
+```` 
+Output may look like; 
+````
+IMAGE          CREATED       CREATED BY                                      SIZE      COMMENT
+4d9c15f5493b   4 weeks ago   /bin/sh -c #(nop) WORKDIR /go                   0B        
+<missing>      4 weeks ago   /bin/sh -c mkdir -p "$GOPATH/src" "$GOPATH/b…   0B        
+<missing>      4 weeks ago   /bin/sh -c #(nop)  ENV PATH=/go/bin:/usr/loc…   0B        
+<missing>      4 weeks ago   /bin/sh -c #(nop)  ENV GOPATH=/go               0B        
+<missing>      4 weeks ago   /bin/sh -c set -eux;  arch="$(dpkg --print-a…   408MB     
+<missing>      4 weeks ago   /bin/sh -c #(nop)  ENV GOLANG_VERSION=1.17.3    0B        
+<missing>      4 weeks ago   /bin/sh -c #(nop)  ENV PATH=/usr/local/go/bi…   0B        
+<missing>      4 weeks ago   /bin/sh -c set -eux;  apt-get update;  apt-g…   227MB     
+<missing>      4 weeks ago   /bin/sh -c apt-get update && apt-get install…   152MB     
+<missing>      4 weeks ago   /bin/sh -c set -ex;  if ! command -v gpg > /…   18.9MB    
+<missing>      4 weeks ago   /bin/sh -c set -eux;  apt-get update;  apt-g…   10.7MB    
+<missing>      4 weeks ago   /bin/sh -c #(nop)  CMD ["bash"]                 0B        
+<missing>      4 weeks ago   /bin/sh -c #(nop) ADD file:5259fc086e8295ddb…   124MB     
+````
+
+As you can see in output, the layers with size>0 are the ones shown in `docker inspect` outputs (top-most layer being the container image itself)
+and also the total size of the underlying layers combined equals the size of the image itself. (it's not always the case, we will get to them later)
+
+Now we can know, underlying layers have their own filesystem.
+
+![image-filesystem](https://user-images.githubusercontent.com/47061262/146952045-0e114759-5c84-4f4f-821d-6a6c6d9ac63b.png)
+
+ *Figure 4.4.2 Docker Image Layering and Filesystem 
+
+We will later learn how to manage them in proper manners with our home-brew Dockerfiles. 
+So far we only have to know that images stack on each other and they have their own filesystems. 
+
+---
+
+### 4.5 Containers 
+
+
+
 
 
