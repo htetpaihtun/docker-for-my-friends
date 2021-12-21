@@ -555,14 +555,17 @@ docker images
 
 ---
 
-### 4.5 Containers 
+### 4.5 Docker Containers 
 
 Now we know about docker images which are technically stopped containers, let's see those images in action:- **containers**.  
 
 A **container** is the runtime instance of an image. In the same way that you can start a virtual machine (VM) from
-a virtual machine template, you start one or more containers from a single
+a virtual machine template, you can start one or more containers from a single image.
 
-You can start a container with commands `docker container run` or `docker run`
+
+#### 4.5.1 Running Containers
+
+You can start a container with commands `docker container run` or `docker run`.
 
 Let's run our hello-world image which we pulled before. If docker can't find local image, Docker will search from docker hub. 
 ````
@@ -658,7 +661,7 @@ Let's run a container running in backgroud.
 docker run -dit --rm --name ubuntu  
 ````
 You will get prompted with container id and immediately back to your terminal. 
-This is because with `d` option, the container runs as daemon (background process).
+This is because with `-d` option, the container runs as daemon (background process).
 You can check the container running with `docker ps` command. 
 Output will be like:
 ````
@@ -735,6 +738,40 @@ Tips:
 > You should try and play around different containers using basic Linux commands such as `bash`, `ps`, `ls`, `apt`,`hostname` and more 
  via `docker exec -it` and `docker attach` to make youself familiar with containers. 
 > Also don't forget to visit https://docs.docker.com/reference/ and use `docker --help` everything you need is there.
+
+Furthermore, we will investigate their lifecycle.
+
+---
+
+#### Stopping Containers Gracefully.
+
+As I mentioned before, when you kill a container with `docker container rm` the container is killed without warning. 
+The procedure is quite violent and poor container has no chance to complete its process and therefore, can't exit gracefully.
+
+Under the hood, it's all about sending Linux/POSIX signals. 
+- `docker container stop` command sends a SIGTERM signal to main process inside container (PID 1). 
+  This gives container a chance to stop its process and finish its life-cycle gracefully.
+  If the container doesn't stop within some amount of time, Docker sends SIGKILL signal.
+- `docker cotainer rm` command sends SIGKILL commands straight. 
+
+---
+
+#### Restart policies 
+
+The thing about modularizing your application and running as one-of processes in container is 
+it becomes easier to track in lower level but then when you are scaling up (what you defintitely want and in microservice architecture)
+it also becomes extremely harder to manage.
+When you are managing micro-services, to avoid higher level complexities, you might want your system to have some sort of self-healing nature.
+Thus, giving your containers to have self-healing nature is the key in managing micro-services.
+
+Restart policies are applied per-container, and can be configured imperatively on the command line as part of
+docker-container run commands, or declaratively in YAML files for use with higher-level tools such as Docker
+Swarm, Docker Compose, and Kubernetes.
+
+In Docker, following restart policies exist;
+- always
+- unless-stopped
+- on-failed
 
 ---
 
