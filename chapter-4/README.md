@@ -2,14 +2,14 @@
 
 Before we start to look at Docker components. Let's learn about what actually is a container.
 
-### 3.1 What is a Linux container 
+### 4.1 What is a Linux container 
 
 As I mentioned before, in earlier years, Docker directly uses [Linux containers (LXC)](https://linuxcontainers.org/) as its runtime and then later dropped it.        
  So, let's take a look it LXC before.
 
 ![LXC architecture](https://www.baeldung.com/wp-content/uploads/sites/2/2020/11/Linux-Container-Architecture-1.jpg)
 
-  _Figure 3.1.2 LXC architecture_
+  _Figure 4.1.2 LXC architecture_
 
 A Linux container, at its core, is made up of; 
 - Namespaces
@@ -17,7 +17,7 @@ A Linux container, at its core, is made up of;
 - Other Kernel capabilities 
 
 ---
-#### 3.1.1 Namespaces
+#### 4.1.1 Namespaces
 
 - Namespaces tell processes **what they can see**.
  
@@ -43,7 +43,7 @@ example output:
 _Following outputs are parent namespaces started when booting with systemd._
 
 ---
-#### 3.1.2 Cgroups (Control Groups)
+#### 4.1.2 Cgroups (Control Groups)
 
 - Cgroups tell processes **what they can use**.
 
@@ -101,6 +101,8 @@ If you want to learn more about Cgroups Redhat has
 [documentation on how to manage resources on RHEL7 Linux](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/resource_management_guide/index)
 (but the concept is same for Linux distros).
 
+Here's the blog from CNCF that further explained about containers: [demystifying-containers](https://github.com/saschagrunert/demystifying-containers).
+
 I also recommend this [super cool video](https://www.youtube.com/watch?v=sK5i-N34im8) (54mins) from Jérôme Petazzoni @PyCon 2016 
 
 which explains Namespaces and Cgroups and demonstration on to make a bare minimum linux container from scratch.
@@ -126,7 +128,7 @@ And I also mentioned about Docker dropping LXC from its core, why and how?
 A quotation from Nigel Poulton's [Docker Deep Dive](https://www.amazon.com/Docker-Deep-Dive-Nigel-Poulton/dp/1521822808)
  
 ![dockerwithlxc](https://user-images.githubusercontent.com/47061262/146825434-3d214b14-d1cb-405f-b915-f7cd66929683.png)
- _Figure 3.1.1 docker implmentation with libcontainer and LXC underneath_
+ _Figure 4.1.1 docker implmentation with libcontainer and LXC underneath_
  
 Omg! There are even more components there but hey, don't worry, these are just extra study I did because I think it is awesome. 
 You won't need to know about these underlying layers just to start working with Docker which we will be doing later.
@@ -139,11 +141,11 @@ You don't need to know about Podman at all but think I will mention it in later 
 
 ![LXC-docker-podman](https://user-images.githubusercontent.com/47061262/146827193-c7d68883-90d5-455e-ac48-4ba1979063b2.png)
 
- *Figure 3.1.4 most popular available containerization solutions*
+ *Figure 4.1.4 most popular available containerization solutions*
 
 ---
 
-### 3.2 Open Container Initiative
+### 4.2 Open Container Initiative
 
 When talking about Docker and containers, **Open Container Initiative (OCI)** also play important part throughout the history of containers.
 
@@ -161,7 +163,7 @@ _for full information, you can visit https://opencontainers.org/about/overview/_
 
 ---
 
-#### 3.3 Docker Engine 
+#### 4.3 Docker Engine 
 
 The Docker engine is the core of the Docker that runs and manages Docker containers and images.
 
@@ -175,7 +177,7 @@ The Docker engine is the core of the Docker that runs and manages Docker contain
 
 ![docker-engine](https://user-images.githubusercontent.com/47061262/146833772-bf336eba-6658-4b37-90c9-9dba4479229b.png)
 
- *Figure 3.3.1 Docker engine overview*
+ *Figure 4.3.1 Docker engine overview*
 
 Like real engines, the Docker engine is modular in design and built from many small specialised tools. Where possible, these are
 based on open standards such as those maintained by the Open Container Initiative (OCI).         
@@ -183,13 +185,13 @@ Docker underwent many design changes over the years to achieve what we had today
 
 ---
 
-### 3.3.1 Docker Client 
+### 4.3.1 Docker Client 
 
 The Docker client `docker` is the primary way that many Docker users interact with Docker. When you use commands such as  `docker run` , the client sends these commands to dockerd, which carries them out.
 
 ---
 
-### 3.3.2 Docker Engine API 
+### 4.3.2 Docker Engine API 
 
 Docker provides an RESTful API for interacting with the Docker daemon (the Docker Engine API), as well as SDKs for Go and Python. 
 The SDKs allow you to build and scale Docker apps and solutions quickly and easily. 
@@ -197,7 +199,7 @@ If Go or Python don’t work for you, you can use the Docker Engine API directly
 *For more information about SDKs, visits: https://docs.docker.com/engine/api/sdk/*
 
 
-### 3.3.3 Docker Daemon
+### 4.3.3 Docker Daemon
 
 The Docker daemon (dockerd) listens for Docker API requests and manages Docker objects such as images, containers, networks, and volumes.
 It mainly implements:
@@ -225,7 +227,7 @@ On any system with docker installed:
 
 ![docker daemon](http://blog.itaysk.com/images/2018-02-06-the-hitchhickers-guide-to-the-container-galaxy_2.png)
 
-  _Figure 2.3.2 docker daemon_
+  _Figure 4.3.1 docker daemon_
   
 
 Initially, Docker daemon is the one making all the jobs around Docker and thus leading to monolithic nature of Docker. 
@@ -244,13 +246,13 @@ The major components that make up the Docker engine are the Docker daemon, conta
 
 ![docker_oci](https://user-images.githubusercontent.com/47061262/146834416-c754c05d-634b-4f0f-895d-3c6c076b4943.png)
 
- *Figure 3.3.2 Docker workflow overview*
+ *Figure 4.3.2 Docker workflow overview*
 
 Let's meet our new components.
 
 ---
 
-### 3.3.4 Containerd 
+### 4.3.4 Containerd 
 
 **[Containerd](https://containerd.io/)** is an industry-standard container runtime with an emphasis on simplicity, robustness and portability.
 Containerd is available as a daemon for Linux and Windows. It manages the complete container lifecycle of its host system, from image transfer and storage to container execution and supervision to low-level storage to network attachments and beyond.
@@ -266,7 +268,7 @@ https://containerd.io/docs/getting-started/
 
 ---
 
-### 3.3.5 runC and shim 
+### 4.3.5 runC and shim 
 
 **runC** is a lightweight, portable container runtime which implements OCI-runtime standard.
 It includes all of the plumbing code used by Docker to interact with system features related to containers. 
