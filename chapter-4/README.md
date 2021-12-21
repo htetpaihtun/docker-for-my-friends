@@ -501,20 +501,248 @@ IMAGE          CREATED       CREATED BY                                      SIZ
 ````
 
 As you can see in output, the layers with size>0 are the ones shown in `docker inspect` outputs (top-most layer being the container image itself)
-and also the total size of the underlying layers combined equals the size of the image itself. (it's not always the case, we will get to them later)
+and also the total size of the underlying layers combined equals the size of the image itself.
 
 Now we can know, underlying layers have their own filesystem.
 
 ![image-filesystem](https://user-images.githubusercontent.com/47061262/146952045-0e114759-5c84-4f4f-821d-6a6c6d9ac63b.png)
 
- *Figure 4.4.2 Docker Image Layering and Filesystem 
+ *Figure 4.4.2 Docker Image Layering and Filesystem*
 
 We will later learn how to manage them in proper manners with our home-brew Dockerfiles. 
-So far we only have to know that images stack on each other and they have their own filesystems. 
+So far we only have to know that 
+- images can be nested with one-dimensional read-only layers
+- images stack on top of each other and they have their own filesystems. 
+- the bottom-most layer is called the base layer and top-most layer represents the container image itself.
+
+---
+
+### 4.4.4 Image Names and Tags 
+
+**Image names** usually come in the format: `registry/path/app-name:tag`. (neither of them is required)
+
+For example, 
+- if your image comes from another registry like gitlab;
+  ````
+  REPOSITORY                                                          TAG              
+  registry.gitlab.com/htetpainghtun/my-repo/my-app                    v1.0
+  ````
+- if your image comes from dockerhub;
+  ````
+  REPOSITORY                                                          TAG              
+  htetpainghtun/my-app                                                v1.0
+  ````
+ -if your images comes from official dockerhub repo (top level images);
+  ````
+  REPOSITORY                                                          TAG
+  golang                                                              latest          
+  ````
+
+**Tags** serves as version control for docker images. They are
+arbitrary alpha-numeric values that are stored as metadata alongside the image. 
+
+You can tag images as you like with command; 
+````
+docker tag hello-world my-app:v1
+````
+and check with;
+````
+docker images 
+````
+
+*Notice how the image ID stays the same as long as you don't modify its contents.*
+*Also if you didn't specify the tag, docker will assumes 'latest'.*
 
 ---
 
 ### 4.5 Containers 
+
+Now we know about docker images which are technically stopped containers, let's see those images in action:- **containers**.  
+
+A **container** is the runtime instance of an image. In the same way that you can start a virtual machine (VM) from
+a virtual machine template, you start one or more containers from a single
+
+You can start a container with commands `docker container run` or `docker run`
+
+Let's run our hello-world image which we pulled before. If docker can't find local image, Docker will search from docker hub. 
+````
+docker run hello-world
+````
+Output will be similar to; 
+````
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+````
+
+You can find your currently running containers on your machine with commands; 
+`docker container ps` or `docker container ls` or `docker ps`
+
+Let's see; 
+````
+docker ps
+````
+The output doesn't show anything.
+This is because the hello-world container runs a one-of process that prints such output and exits.
+
+You can find all of your containers (both running or exited) with command; 
+````
+docker ps -a
+````
+Now, there you go;
+````
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS                     PORTS     NAMES
+e3424a2c7dc7   hello-world                           "/hello"                 8 seconds ago   Exited (0) 7 seconds ago             amazing_pasteur
+````
+You can now see its exit status along with other information. 
+Also notice how Docker automatically names your container in runtime which is "amazing_pasteur" in my case. 
+You can specify your container name with `--name my-container` option.
+The complete command would be ;
+````
+docker run --name my-container hello-world
+````
+
+In similar fashion to images, you can inspect containers with `docker inspect` command.
+````
+docker inspect my-container
+````
+It will show all the information about the container you specified.
+You can delete with `docker container rm` or `docker rm` command
+````
+docker rm my-container
+````
+
+Now let's try running ubuntu container.
+````
+docker run -it ubuntu bash
+````
+- `-t` option means allocate a pseudo-tty
+- `-i` option means keep STDIN open even if not attached
+- `ubuntu` is the image we will be running 
+- `bash` is the command we start our container with.
+You can specify commands to start your container with. 
+Let's say we don't want to run bash, instead we want to see filesystem in the containers.
+The Unix commands for that is `ls -a`.
+Let's see.
+````
+docker run --it --rm --name ubuntu-ls ls -a
+````
+- `--rm` option means clean up the container(`docker rm`) after it exited, so that we don't have messy footprints of containers histroy.
+- `ls -a` is the command we passed 
+
+Output will be similar to:
+````
+.   .dockerenv	boot  etc   lib    lib64   media  opt	root  sbin  sys  usr
+..  bin		dev   home  lib32  libx32  mnt	  proc	run   srv   tmp  var
+````
+So far, we have been working with the containers that are running in foreground and exited after its process ends.
+Let's run a container running in backgroud.
+````
+docker run -dit --rm --name ubuntu  
+````
+You will get prompted with container id and immediately back to your terminal. 
+This is because with `d` option, the container runs as daemon (background process).
+You can check the container running with `docker ps` command. 
+Output will be like:
+````
+CONTAINER ID   IMAGE     COMMAND   CREATED          STATUS          PORTS     NAMES
+33673b08a165   ubuntu    "bash"    13 seconds ago   Up 12 seconds             my-ubuntu
+````
+And if we want to get back to it, we can use `docker exec` and `docker attach` commands.
+Let's try `docker exec`:
+````
+docker exec -it my-ubuntu bash
+````
+`bash` is necessary because what docker exec does is executing a command in a container.
+
+In this case, we will be running `bash` command with options `-it` in our container named "my-ubuntu". 
+You will get the same terminal as before. 
+
+Another way is to attach to its entrypoint with `docker attach` command.
+````
+docker attach my-ubuntu
+````
+You will get to the same terminal as well. 
+What `attach` command does is attaching your terminal’s standard input, output, and error (or any combination of the three) to a running container. 
+This allows you to view its ongoing output or to control it interactively, as though the commands were running directly in your terminal.
+
+Notice if you `exit` the container, the main process exited and the container is considered to be completed his process.
+So, our container will exit and later be removed by `--rm` option. 
+If you just want to deattach the container, escape sequence is `Ctrl+ p q`. 
+
+In this example we are running ubuntu container and it has no pratical usage to include `-d` option. 
+We will try more practial usage by running a real nginx server with `-d` "runs in background" option.
+
+It is necessary practice to visit the documentation or, at least, docker hub page before using images from remote repositories.
+In our case, it would be
+[nginx official documentation](https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-docker/) and 
+[docker hub page](https://hub.docker.com/_/nginx). 
+
+After read the instructions, you'll be feel free to use it.
+````
+ docker run -d --name my-nginx-server -p 8080:80 nginx
+```` 
+- `-p` option publish a container's port(s) to the host with your defined port `$HOST_PORT:$CONTAINER_POT`.
+- `-P` option publish all exposed ports to random ports.
+
+First, let's check container status with `docker ps` and output will be like:
+````
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                                   NAMES
+b31e6a998ca7   nginx     "/docker-entrypoint.…"   5 seconds ago   Up 4 seconds   0.0.0.0:8080->80/tcp, :::8080->80/tcp   my-nginx-server
+````
+Let's see if it's actually running on our localhost.
+You can directly and simply point your browser to `localhost:8080` or `curl localhost:8080` in terminal.
+
+![Screenshot 2021-12-21 at 23-43-11 Welcome to nginx ](https://user-images.githubusercontent.com/47061262/146971145-c85fbd43-22c5-438f-945d-7e72bfa81c4d.png)
+
+Congratulation! We just ran our first practically useable nginx server with Docker.
+
+You can stop and remove it with;
+````
+docker stop my-nginx-server 
+docker rm my-nginx-server
+````
+You can run many containers with a single image as long as you have enough host ports available and your container name is unique.
+````
+docker run -d --name my-nginx-server-1 -p 8080:80 nginx
+docker run -d --name my-nginx-server-2 -p 8081:80 nginx
+docker run -d --name my-nginx-server-3 -p 8082:80 nginx
+````
+Clean up:
+````
+docker rm -f my-nginx-server-1 my-nginx-server-2 my-nginx-server-3
+````
+`-f` option means force and it terminates containers without noticing them. (**not optimal and recommended**) 
+
+Tips: 
+> You should try and play around different containers using basic Linux commands such as `bash` , `ps` and `ls` `apt`,`hostname` and more 
+ via `docker exec -it` and `docker attach` to make youself familiar with containers. 
+> Also don't forget to visit https://docs.docker.com/reference/ and use `docker --help` everything you need is there.
+
+
+
+
+
+
+
+
 
 
 
