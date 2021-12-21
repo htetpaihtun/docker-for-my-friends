@@ -6,7 +6,7 @@ Hello this is "INTRODUCTION TO DOCKER FOR MY FRIENDS".
 This is my take on docker after learning containerization technology for a year so I may not be very experienced and "all knowing" around docker but hey, here's my 8 cents for those people like me who wants to learn docker from absolute beginner perspective. :)
 
 Also I will add some additional information about best practices, my own practices and things to aware while getting started (as I learn through) for using docker to its potential.
-This course will cover all you need to know and all you might want to know as a complete stranger to containerizationtechnology and yeah, of course, Docker.
+This course will cover all you need to know and all you might want to know as a complete stranger to containerization technology and yeah, of course, Docker.
 Enjoy.. 
 
 In this course, you will learn 
