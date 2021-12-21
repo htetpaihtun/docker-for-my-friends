@@ -40,21 +40,22 @@ What's next..
 	2.3.2-- The Docker Daemon
 	2.3.3-- The Orchestrator (Docker swarm) 
 	
-## Chapter 3  	Docker components Deep dive.
-	3.1---- What is a Linux Container
-	3.1.1-- Namespaces
-	3.1.2-- Cgroups (Control Groups)
-	3.2---- Open Container Initiative
-	3.3---- Docker Engine
-	3.4---- Docker Images
-	3.5---- Docker Containers
-	3.6---- Docker Volumes
-	3.7---- Docker Networks
-	
-## Chapter 4 	Installing docker 	
+## Chapter 3 	Installing docker 	
 
 	4.1---- Installing docker on linux
 	4.2---- Installing docker on Mac/Windows
+	
+## Chapter 4  	Docker components Deep dive.
+
+	4.1---- What is a Linux Container
+	4.1.1-- Namespaces
+	4.1.2-- Cgroups (Control Groups)
+	4.2---- Open Container Initiative
+	4.3---- Docker Engine
+	4.4---- Docker Images
+	4.5---- Docker Containers
+	4.6---- Docker Volumes
+	4.7---- Docker Networks
 	
 ## Chapter 5 	Hands-on with docker 		
 
