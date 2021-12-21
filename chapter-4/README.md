@@ -732,12 +732,11 @@ docker rm -f my-nginx-server-1 my-nginx-server-2 my-nginx-server-3
 `-f` option means force and it terminates containers without noticing them. (**not optimal and recommended**) 
 
 Tips: 
-> You should try and play around different containers using basic Linux commands such as `bash` , `ps` and `ls` `apt`,`hostname` and more 
+> You should try and play around different containers using basic Linux commands such as `bash`, `ps`, `ls`, `apt`,`hostname` and more 
  via `docker exec -it` and `docker attach` to make youself familiar with containers. 
 > Also don't forget to visit https://docs.docker.com/reference/ and use `docker --help` everything you need is there.
 
-
-
+---
 
 
 
