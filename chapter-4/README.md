@@ -348,17 +348,25 @@ You can inspect this image with command;
 ````
 docker image inspect hello-world
 ````
+You can list all docker images with commands 
+````
+docker images
+````
+or 
+````
+docker image ls
+````
 
 You will learn to build images from your own Dockerfile in next chapter.
 
-
 The purpose of a container is to run a single application or service.
 This means it only needs the code and dependencies of the application or service it is running — it does not need anything else. 
-This results in small images
-stripped of all non-essential parts.
+This results in small images stripped of all non-essential parts.
 So, you might always want to find ways to minimize your image size.
 
-There are various strategies or methods to reduce your image;
+There are various strategies or methods to reduce your image size;
+
+Using 
 
 
 
