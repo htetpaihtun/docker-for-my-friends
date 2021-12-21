@@ -362,6 +362,8 @@ docker.io/library/hello-world:latest
 ````
 This pulls a image that prints hello-world to terminal from [Docker hub](https://hub.docker.com/)
 
+`docker image inspect` allows you to obtain all the information about specific image.
+
 You can inspect this image with command;
 ````
 docker image inspect hello-world
@@ -386,25 +388,71 @@ There are various strategies or methods to reduce your image size;
 - Using lightweight base distro-less images like `alpine`
 - Reduce image layers as much as possible
 
-#### Choosing base image 
+#### Image Layers
 
-For example, Docker images do not ship with many different shells for you to choose from.
-The good rule of thumb is **"if your application doesn't need it, you better not include it"**.
+For example, Docker images do not ship with many different shells for you to choose from.   
+
+The good rule of thumb is **"if your application doesn't need it, you better not include it"**.   
 So, many application images ship without a shell or basic command line tools that you're familiar with on your Linux system. 
-Your image should define your application only.
+Your image should define your application only.    
 Image also don’t contain a kernel — all containers running on a Docker host share access to the host’s kernel. For
 these reasons, we sometimes say images contain just enough operating system (usually just OS-related files and
 filesystem objects).
 
 Let's take a look at difference between images.
 First, we will pull some images from Docker hub.
-```
+````
 docker pull alpine  
 docker pull ubuntu
 docker pull golang
-```
-```
-echo "amt"
-echo "mta"
+````
+and we will list them. 
+````
+docker images
+````
+Output is similar to; 
+````
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+alpine       latest    c059bfaa849c   3 weeks ago   5.59MB
+ubuntu       latest    ba6acccedd29   2 months ago  72.8MB
+golang       latest    4d9c15f5493b   4 weeks ago   941MB
+````
+Notice how golang image is like 168 times larger than alpine image.
+
+We will inspect each one of them.
+We will look at alpine image first
+````
+docker image inspect alpine
+````
+You will see something like this in output;
+
+````
+...
+"Type": "layers",
+            "Layers": [
+                "sha256:8d3ac3489996423f53d6087c81180006263b79f206d3fdec9e66f0e27ceb8759"
+            ]
+...
 ````
 
+This indicates the image only has a single layer.
+Let's look at golang image;
+````
+docker image inspect golang
+````
+In output;
+````
+...
+"Type": "layers",
+            "Layers": [
+                "sha256:a36ba9e322f719a0c71425bd832fc905cac3f9faedcb123c8f6aba13f7b0731b",
+                "sha256:5499f2905579e85017f919e25be9e7a50bcc30c61294f12479b289708ebb31fa",
+                "sha256:a4aba4e59b40caa040cc3ccfa42a84bbe64e3da8d1e7e0da69100c837afd215a",
+                "sha256:8a5844586fdb00f07529ad1b3eb20167ba3a176302ecccbae1fbb45620acb89f",
+                "sha256:fcd5459f6d07e8f21ca20db8d9872d61ae0e63064de5cebdae30ccf870d58706",
+                "sha256:b584572b0aabd77494ee94f0244dd2e186fa3ee5b5159985b6705115f72b7438",
+                "sha256:32185d066b1479d6463b3f09004ed139263dd6242587dda5cfa7503db588504f"
+            ]
+...           
+````
+This indicates there are 7 layers in the images.
