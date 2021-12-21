@@ -329,9 +329,27 @@ There are mainly 2 ways to get your images;
 - pulling from image registry (docker's default registry is [Docker Hub](https://hub.docker.com/))
 - building one from Dockerfile 
 
-You can get an image from [Docker hub](https://hub.docker.com/) with command;
+### Image Registries
+
+Like we store out code in GitHub we store our images in [Docker hub](https://hub.docker.com/).
+[Docker Hub](https://hub.docker.com/) is one of the most popular registry and also default in Docker.
+
+You can search image from [Docker hub](https://hub.docker.com/) with command;
 ````
- docker pull hello-world 
+docker search hello-world
+````
+Output is similar to; 
+```
+NAME                                       DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+hello-world                                Hello World! (an example of minimal Dockeriz…   1599      [OK]       
+kitematic/hello-world-nginx                A light-weight nginx container that demonstr…   151                  
+tutum/hello-world                          Image to test docker deployments. Has Apache…   87                   [OK]
+...
+````
+
+You can pull an image from [Docker hub](https://hub.docker.com/) with command;
+````
+docker pull hello-world 
 ````
 
 Output is similar to; 
@@ -365,11 +383,28 @@ This results in small images stripped of all non-essential parts.
 So, you might always want to find ways to minimize your image size.
 
 There are various strategies or methods to reduce your image size;
+- Using lightweight base distro-less images like `alpine`
+- Reduce image layers as much as possible
 
-Using 
+#### Choosing base image 
 
+For example, Docker images do not ship with many different shells for you to choose from.
+The good rule of thumb is **"if your application doesn't need it, you better not include it"**.
+So, many application images ship without a shell or basic command line tools that you're familiar with on your Linux system. 
+Your image should define your application only.
+Image also don’t contain a kernel — all containers running on a Docker host share access to the host’s kernel. For
+these reasons, we sometimes say images contain just enough operating system (usually just OS-related files and
+filesystem objects).
 
-
-
-
+Let's take a look at difference between images.
+First, we will pull some images from Docker hub.
+```
+docker pull alpine  
+docker pull ubuntu
+docker pull golang
+```
+```
+echo "amt"
+echo "mta"
+````
 
