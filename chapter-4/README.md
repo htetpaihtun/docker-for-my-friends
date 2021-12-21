@@ -329,7 +329,9 @@ There are mainly 2 ways to get your images;
 - pulling from image registry (docker's default registry is [Docker Hub](https://hub.docker.com/))
 - building one from Dockerfile 
 
-### Image Registries
+--- 
+
+### 4.4.1 Image Registries
 
 Like we store out code in GitHub we store our images in [Docker hub](https://hub.docker.com/).
 [Docker Hub](https://hub.docker.com/) is one of the most popular registry and also default in Docker.
@@ -362,13 +364,7 @@ docker.io/library/hello-world:latest
 ````
 This pulls a image that prints hello-world to terminal from [Docker hub](https://hub.docker.com/)
 
-`docker image inspect` allows you to obtain all the information about specific image.
-
-You can inspect this image with command;
-````
-docker image inspect hello-world
-````
-You can list all docker images with commands 
+You can list all docker images with command;
 ````
 docker images
 ````
@@ -376,21 +372,23 @@ or
 ````
 docker image ls
 ````
-
+and remove images with command;
+````
+docker rmi hello-world
+````
+or 
+````
+docker image rm hello-world
+````
 You will learn to build images from your own Dockerfile in next chapter.
 
-The purpose of a container is to run a single application or service.
-This means it only needs the code and dependencies of the application or service it is running — it does not need anything else. 
+---
+
+#### 4.4.2 Inspecting Images
+
+A container only needs the code and dependencies of the application or service it is running — it does not need anything else. 
 This results in small images stripped of all non-essential parts.
-So, you might always want to find ways to minimize your image size.
-
-There are various strategies or methods to reduce your image size;
-- Using lightweight base distro-less images like `alpine`
-- Reduce image layers as much as possible
-
-#### Image Layers
-
-For example, Docker images do not ship with many different shells for you to choose from.   
+Gernerally, Docker images do not ship with many different shells for you to choose from.   
 
 The good rule of thumb is **"if your application doesn't need it, you better not include it"**.   
 So, many application images ship without a shell or basic command line tools that you're familiar with on your Linux system. 
@@ -419,11 +417,18 @@ golang       latest    4d9c15f5493b   4 weeks ago   941MB
 ````
 Notice how golang image is like 168 times larger than alpine image.
 
-We will inspect each one of them.
-We will look at alpine image first
+So, you'd clearly better be choosing and building right image for production.
+
+Further more inspection,we will inspect each one of them.
+
+`docker image inspect` command allows you to obtain all the information about specific image.
+
+We will look at alpine image first;
+
 ````
 docker image inspect alpine
 ````
+
 You will see something like this in output;
 
 ````
@@ -455,4 +460,13 @@ In output;
             ]
 ...           
 ````
-This indicates there are 7 layers in the images.
+This indicates there are 7 layers in the images. So, what are image layers?
+
+### 4.4.3 Images Layers
+
+A Docker image is just a bunch of loosely-connected read-only layers, with each layer comprising one or more
+files.
+
+![docker image layers](https://user-images.githubusercontent.com/47061262/146947646-690a8c83-a4bd-43dd-b517-f34db0ba1723.png)
+
+
