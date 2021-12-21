@@ -198,6 +198,19 @@ The SDKs allow you to build and scale Docker apps and solutions quickly and easi
 If Go or Python don’t work for you, you can use the Docker Engine API directly via `wget` or `curl`, or the HTTP library which is part of most modern programming languages.
 *For more information about SDKs, visits: https://docs.docker.com/engine/api/sdk/*
 
+You can simply send requests to your Docker engine API with following steps;
+
+On Linux:
+
+````
+curl --unix-socket /var/run/docker.sock localhost:2375/$your_api_version/containers/json
+````
+
+With Docker Desktop, you will need to go to Docker Desktop setting and find "Expose daemon on `tcp://localhost:2375` without TLS" option and enable it.
+
+And point your browser to : `localhost:2375/$your_api_version/containers/json`
+
+---
 
 ### 4.3.3 Docker Daemon
 
@@ -273,12 +286,82 @@ https://containerd.io/docs/getting-started/
 **runC** is a lightweight, portable container runtime which implements OCI-runtime standard.
 It includes all of the plumbing code used by Docker to interact with system features related to containers. 
 In docker, it is the thing that actually creates your containers with instructions from containerd.
-runC is just here to create containers and after this, it exits and shim become container's parent process.
+runC is just here to create containers and after this, it exits and shim become container's parent process.             
 
-runC is the implementation of OCI-runtime and is donated to [CNCF](https://www.cncf.io/) by Docker. 
+runC is the de facto implementation of OCI-runtime and is donated to [CNCF](https://www.cncf.io/) by Docker. 
 
-**shim(docker shim)**
+
+The **shim** is integral to the implementation of daemonless containers (what we just mentioned about decoupling
+running containers from the daemon for things like daemon upgrades).
+
+Some of the responsibilities the shim performs as a container’s parent include:
+- Keeping any STDIN and STDOUT streams open so that when the daemon is restarted, the container
+doesn’t terminate due to pipes being closed etc.
+- Reports the container’s exit status back to the daemon.
 
 --- 
+
+After this modular decomposition of Docker daemon, you might be thinking what responsibilities or features left in docker daemon.  
+Some of the major functionality that still exists in the daemon includes; 
+- image management 
+- image builds
+- the REST API
+- authentication
+- security
+- core networking
+- orchestration
+
+---
+
+### 4.4 Docker Images 
+
+A Docker image is a unit of packaging that contains everything required for an application to run.  
+This includes; application code, application dependencies, and OS constructs. If you have an application’s Docker image, the
+only other thing you need to run that application is a computer running Docker (or other container runtime).
+
+Docker images are like VM templates, stopped containers or object classes from programming languages. It defines your container. 
+
+Images are made up of multiple layers that are stacked on top of each other and represented as a single object.
+Inside of the image is a cut-down operating system (OS) and all of the files and dependencies required to run
+an application. Because containers are intended to be fast and lightweight, images tend to be small.
+
+There are mainly 2 ways to get your images;
+- pulling from image registry (docker's default registry is [Docker Hub](https://hub.docker.com/))
+- building one from Dockerfile 
+
+You can get an image from [Docker hub](https://hub.docker.com/) with command;
+````
+ docker pull hello-world 
+````
+
+Output is similar to; 
+````
+Using default tag: latest
+latest: Pulling from library/hello-world
+Digest: sha256:2498fce14358aa50ead0cc6c19990fc6ff866ce72aeb5546e1d59caac3d0d60f
+Status: Image is up to date for hello-world:latest
+docker.io/library/hello-world:latest
+````
+This pulls a image that prints hello-world to terminal from [Docker hub](https://hub.docker.com/)
+
+You can inspect this image with command;
+````
+docker image inspect hello-world
+````
+
+You will learn to build images from your own Dockerfile in next chapter.
+
+
+The purpose of a container is to run a single application or service.
+This means it only needs the code and dependencies of the application or service it is running — it does not need anything else. 
+This results in small images
+stripped of all non-essential parts.
+So, you might always want to find ways to minimize your image size.
+
+There are various strategies or methods to reduce your image;
+
+
+
+
 
 
