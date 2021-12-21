@@ -743,7 +743,7 @@ Furthermore, we will investigate their lifecycle.
 
 ---
 
-#### Stopping Containers Gracefully.
+#### 4.5.2 Stopping Containers Gracefully
 
 As I mentioned before, when you kill a container with `docker container rm` the container is killed without warning. 
 The procedure is quite violent and poor container has no chance to complete its process and therefore, can't exit gracefully.
@@ -756,22 +756,83 @@ Under the hood, it's all about sending Linux/POSIX signals.
 
 ---
 
-#### Restart policies 
+#### 4.5.3 Restart policies 
 
 The thing about modularizing your application and running as one-of processes in container is 
-it becomes easier to track in lower level but then when you are scaling up (what you defintitely want and in microservice architecture)
-it also becomes extremely harder to manage.
-When you are managing micro-services, to avoid higher level complexities, you might want your system to have some sort of self-healing nature.
-Thus, giving your containers to have self-healing nature is the key in managing micro-services.
+it becomes easier to track in lower level but then when you are scaling up (what you definitely want and will do in microservice architecture),
+it also becomes extremely hard to manage.
+When you are managing micro-services, it is crucial to have some sort of self-healing nature to avoid higher level complexities. 
 
 Restart policies are applied per-container, and can be configured imperatively on the command line as part of
 docker-container run commands, or declaratively in YAML files for use with higher-level tools such as Docker
-Swarm, Docker Compose, and Kubernetes.
+Swarm and Docker Compose (in later chapters) or Kubernetes.
 
 In Docker, following restart policies exist;
+- no (default)
 - always
 - unless-stopped
-- on-failed
+- on-failure
+
+**No**: Do not automatically restart the container. (default)
+
+**Always**: restart the container if it stops. 
+If it is manually stopped, it is restarted only when Docker daemon restarts or the container itself is manually restarted. 
+
+**On-failure**: Restart the container if it exits due to an error, which manifests as a non-zero exit code. 
+Optionally, you can limit the number of times the Docker daemon attempts to restart the container using the :max-retries option.
+
+**Unless-stopped**: Similar to always, except that when the container is stopped (manually or otherwise), 
+it is not restarted even after Docker daemon restarts.
+
+*Restart policies only apply to containers. Restart policies for swarm services are configured differently.* 
+
+An easy way to demonstrate this is to start a new interactive container, with the --restart always policy, and tell it to run a shell process.   
+When the container starts you will be attached to its shell. 
+Typing exit from the shell will kill the container’s PID 1 process and kill the container.
+However, Docker will automatically restart it because it has the `--restart` always policy. 
+
+Let's make a nginx-server with restart always policies and attach to its terminal.
+````
+docker run --name my-nginx-server -it --restart always nginx bash
+````
+You will be attached to its shell by `it` options and then you `exit` from its shell and check again with 
+`docker ps` , you will see it automatically restarted itself.
+````
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES
+de5585e43b64   nginx     "/docker-entrypoint.…"   23 seconds ago   Up 15 seconds   80/tcp    my-nginx
+````
+Now you have to manually stop with `docker stop` command or force it with `docker rm`. 
+
+Difference between the always and unless-stopped policies is that containers with the `--restart
+unless-stopped` policy **will not be restarted** when the daemon restarts if they were in the Stopped (Exited)
+state. 
+
+Let's try and compare restart-always policy and unless-stopped policy.
+````
+docker run --name restart-always-nginx -d --restart always nginx 
+docker run --name unless-stopped-nginx -d --restart unless-stopped nginx
+````
+And then restart your docker daemon with;
+
+Using Docker Desktop or
+
+On Linux
+````
+systemctl restart docker
+````
+On Mac
+````
+launchctl restart docker
+````
+And then check their status with 
+````
+docker ps -a 
+````
+Output will be similar to:
+````
+ Output here am lazy
+````
+You can see that only unless-stopped-nginx has been restarted. 
 
 ---
 
