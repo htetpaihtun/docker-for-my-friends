@@ -855,7 +855,6 @@ c6b38bf5a3c2   nginx                                 "/docker-entrypoint.…"   
 68ab3eb4c0e7   nginx                                 "/docker-entrypoint.…"   2 minutes ago   Up 19 seconds               80/tcp    restart-always-nginx
 ````
 You can see that only unless-stopped-nginx has been restarted. 
-We will talk about "on-failure" policy in next section.
 
 ---
 
@@ -868,41 +867,291 @@ So, Docker did not detect this state of the container and would not reschedule i
 causing some containers to be unable to serve, but still accepting user requests.
 
 So, you might want to tell Docker how your container should be acting. 
-The HEALTHCHECK directive tells Docker how to determine if the state of the container is normal.
+Docker HEALTHCHECK allows you to tell  Docker how to determine if the state of the container is normal.
 
 Let's create a nginx container with custom health check command.
 ````
-docker run -dit \
---name nginx-health-care \
--p 8080:80 \ 
---health-cmd "curl localhost:80" \ 
-nginx
+docker run -dit --name nginx-health-care -p 8080:80 --health-cmd "curl localhost:80" nginx
+````
+You can see healthcheck status in status field of `docker ps`. After 30s, it will say "healthy". 
+This way, you can know whether the container is acting normally or not.
+This is useful when you are orchestrating many containers with higher level tools like Docker swarm or Kubernetes.
+
+Let's try to make container unhealthy.
+````
+docker exec nginx-health-care rm /etc/nginx/conf.d/default.conf
+docker exec nginx-health-care nginx -s reload 
+````
+The follwing is for demonstration purpose and you will rarely delete nginx's configuration file in real life.
+- `rm etc/nginx/conf.d/default.conf` command delete nginx's default configuration file.
+- `nginx -s reload` command restart nginx service inside container.
+This generally makes nginx to behave imporperly. 
+This is not detectable by Docker by default because Docker doesn't know the exact state of your process.
+It only knows whether it exited or not.
+When we check with `docker ps`, after some time, it will say "unhealthy".
+````
 ````
 
+Now, let's try to create a nginx-server with it's own self-healing mechanism.
+````
+docker run -d name self-healing-server -p 8080:80 --restart unless-stopped --health-cmd "curl localhost:80 || nginx -s stop" nginx 
+````
+- `curl localhost:80 || nginx -s stop` says try connect to localhost:80, if fails, stop the nginx service(which is PID in our case).
+
+We will try to make nginx crashes.
+````
+docker exec nginx-health-care rm /etc/nginx/conf.d/default.conf
+docker exec nginx-health-care nginx -s reload 
+````
+And let's watch it crashes and restart again.
+````
+watch docker ps -a 
+````
+Nice, we can monitor its whole lifecycle now.
+We didn't specify its restart count limit, so it will keep restarting itself forever.
+
+But, our way of crashing nginx server is not realistic since we just delete some config file from the container to make it fail.
+So, restarting container doesn't actually fix the problem. 
+This is not what happens in most case.
+
+And also the way of making nginx stops in health check command is not correct at all.
+So, you won't be doing health check this way. 
+We will see how to actually use healthcheck in proper way in later chapters.
+ 
+But, we do learn how to make basic healthcheck the Docker way. 
+And, if you're paying attention, you will notice how the container's files perists through his restarts.
+If we just remove container directly with `docker rm` and build exact same container with exact same command,
+we will see it is working again. 
+This is, in fact, how we exactly want our containers to act i.e. to die and completely replace with another one in its place.
+So, like images, containers also have its own filesystems. 
+We will learning about them in next chapter.
 
 ---
 
 ### 4.6 Docker Volumes
 
-Stateful applications that persist data are becoming more and more important in the world of cloud-native and microservices applications.
+Stateful applications that persist data are important in the world of cloud-native and microservices applications.			
+For this purpose, Docker provides 2 type of storage for us, non-persistent and persistent.
 
-Docker container gets its own non-persistent storage. 
+
+#### 4.6.1 Non-Persistent storage
+
+When you are creating Docker containers, each Docker container gets its own non-persistent storage. 
 This is automatically created for every container and is tightly coupled to the lifecycle of the container.
 
-Docker containers are, in fact, ephermeral and **immutable**, meaning they can easily be started, deleted, replaced and replicated.
+We have seen it in action in previous section. But let's play around a little bit more by creating ubuntu container.
+````
+docker run -it --name my-container ubuntu 
+````
+In the container, we will create some files there.
+````
+echo "Hello, I was here" >  myfile.txt
+````
+You can verify with `ls` command. And then we exit from the container.
+Confirm with `docker ps -a`.
+Let's start the container again.
+````
+docker start -ia my-container
+````
+- `a` means attach container's STDOUT, STDERR and SIG stream to your terminal
+- `i` means attach container's STDIN to your terminal
+And then we check with `ls` and read it's content with `cat myfile.txt`, We can see that our data persist through restarts.
+If we create a new container from same image again, we won't be able to view our data we created.
+		
+So, it is visable that containers create a read-write layer on top of read-only layer of the container image it's based on. 
+This writable layer of local storage is managed on every Docker host by a storage driver such as overlay2, aufs, btrfs and more. 
+
+Containers are supposed to be ephermeral and **immutable**, meaning they can easily be started, deleted, replaced and replicated.
 They do not persist its data beyond its lifetime.
+Like I said before, we don't do configuration to containers directly. 
+We rather destroy it and then create new container with different configuration from either different or same image.
+It's called immutablity of containers. 
+
+#### 4.6.2 Persistent Storage
 
 So, if needed, containers need to persist the application's data elsewhere. 
-This is where volumes came in. 
-Volumes are separate objects that have their lifecycles decoupled from containers. 
-This means you can create and manage volumes independently, and they’re not tied to the lifecycle of any container. 
-Net result, you can delete a container that’s using a volume, and the volume won’t be deleted.
+This is where persistent volumes came in.
 
-Let's get started. 
+ - Volumes are separate objects that have their lifecycles decoupled from containers. 
+  This means you can create and manage volumes independently, and they’re not tied to the lifecycle of any container. 
+  Net result, you can delete a container that’s using a volume, and the volume won’t be deleted.
 
+ - Volumes can be mapped to specialized external storage systems
+
+ - Volumes enable multiple containers on different Docker hosts to access and share the same data.
+
+# ADDED FIGURES
+
+Let's start by creating a volume.
+````
+docker volume create myvol 
+````
+and check with
+````
+docker volume ls
+````
+Output will look like;
+
+````
+DRIVER    VOLUME NAME
+local     myvol
+````
+You can also inspect volumes like images and containers.
+````
+docker volume inspect myvol
+````
+Output will be similar to; 
+````
+[
+    {
+        "CreatedAt": "2021-12-23T03:51:07+06:30",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/docker/volumes/myvol/_data",
+        "Name": "myvol",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+````
+- By default, docker uses 'local' driver for your volumes.
+- You can use labels to group your containers and volumes together.
+- Mountpoints shows where your volume actaully exists in your host system.
+
+You can remove volumes with
+````
+docker volume rm myvol
+````
+or 
+````
+docker volume prune
+````
+which will delete all unused volumes in your system.
+
+We can see that, we can treat our volume as separate object from our containers. 
+
+Let's create a volume and use it in our containers.
+````
+docker run -dit --name vol-container-1 --mount source=myvol,target=/vol ubuntu
+docker run -dit --name vol-container-2 --mount source=myvol,target=/vol ubuntu
+````
+- `source` is the volume you want to use. (docker will create new one if it doesn't find exisiting one)
+- `target` is the location inside that volume which will then binded to your volume.
+Basically, "myvol" and "/vol" directory are linked together now.
+Other directories inside the containers will not be mounted to the volume.
+
+Let's write something into volume from vol-container-1.
+````
+echo "Container 1 was here." > /vol/container1.txt
+ls -al /vol/
+````
+Deattach from container-1 with `Ctrl+ P Q` and attach to vol-container-2 to check the file.
+````
+docker attach vol-container-2 
+ls -al /vol/
+cat /vol/container-1.txt
+````
+You can see the text we wrote earlier from container-1.
+
+Now, let's try binding our host system directory with a new container. 
+I will show you how to make a dev enviorment with docker container.
+You can achieve this without having to install progamming languages and dependencies, 
+also having your host system clean and isolated.
+
+Let's quickly make a go app that say hello.
+Create a file named main.go and edit with your favourite editor. 
+
+````
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("HELLO WORLD!")
+}
+````
+And let's point this current directory to a go lang container.
+````
+docker run -it --name go-dev-env -v $PWD/:/code/ golang 
+````
+- `-v` option allows us to mount our host directory to the container.
+
+And then in container, 
+````
+go run /code/main.go
+````
+Output: 
+````
+HELLO WORLD!
+```` 
+There you have it. 
+Whatever changes you make will take effect immediately.
+This way, you can write codes without having to install programming languages locally.
+You can even use them as compiler for your code.
+````
+cd /code/
+go build main.go
+````
+You will get binary file on your system and later you can delete or whatever you like to your container.
+Try and run your binary on your clean host. 
+````
+./main
+````
+I use this method a lot because I like to keep my system clean and isolated.
+Also it feels better when dealing with many version releases and damn npm packages. 
+
+Let's revist to our nginx server. 
+This time, we will be using our config file outside of the container and mounts into it.
+
+In default.conf file;
+````
+server {
+    listen       81;
+    listen  [::]:81;
+    server_name  localhost;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  my-index.html index.htm;
+    }
+}
+```` 
+This is bare minimum nginx configuration file that listens at container port 81 (default was 80) 
+and say "serve this my-index.html file under /usr/share/nginx/html directory". That's all you need to know.
+
+And in my-index.html file;
+````
+<!DOCTYPE html>
+<html>
+<head>
+<title>HELLO !</title>
+</head>
+<body>
+<h1> Hello from nginx server using custom config file and custom index.html!</h1>
+</body>
+</html> 
+````
+This prints hello-world with HTML.
+
+Now we will create a nginx server container with these two files mounted into it.
+
+````
+docker run -dit -p 8080:81 \
+-v $PWD/default.conf:/etc/nginx/conf.d/default.conf \
+-v $PWD/my-index.html:/usr/share/nginx/html/my-index.html \
+ nginx
+````
+- In first volume mount, we will overwrite default.conf file with out own default.conf file from host system.
+- In second volume mount, we will added our own my-index.html and pass to nginx.
+
+Now, we know how to talk to containers via storage.
+
+Next step, is the network.
 
 ---
-### 4.6 Docker Netowrks
+### 4.6 Docker Networks
 
 
 ELP
