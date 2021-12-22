@@ -163,7 +163,7 @@ _for full information, you can visit https://opencontainers.org/about/overview/_
 
 ---
 
-#### 4.3 Docker Engine 
+### 4.3 Docker Engine 
 
 The Docker engine is the core of the Docker that runs and manages Docker containers and images.
 
@@ -812,27 +812,73 @@ Let's try and compare restart-always policy and unless-stopped policy.
 docker run --name restart-always-nginx -d --restart always nginx 
 docker run --name unless-stopped-nginx -d --restart unless-stopped nginx
 ````
-And then restart your docker daemon with;
+And if you restart your docker daemon right away, your containers will restart regardless of restart policies. 
+But if your container, somehow, exits or you stop manually with `docker stop` the containers will act according to restart policies. 
 
-Using Docker Desktop or
+Let's restart the docker daemon with;
+
+Using Docker Desktop UI or
 
 On Linux
 ````
-systemctl restart docker
+sudo systemctl restart docker
 ````
 On Mac
 ````
-launchctl restart docker
+sudo launchctl restart docker
 ````
 And then check their status with 
 ````
 docker ps -a 
 ````
-Output will be similar to:
+You will notice that all of your containers restarted.
+
+Output will be similar to;
 ````
- Output here am lazy
+CONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS         PORTS     NAMES
+c6b38bf5a3c2   nginx     "/docker-entrypoint.…"   About a minute ago   Up 3 seconds   80/tcp    unless-stopped-nginx
+68ab3eb4c0e7   nginx     "/docker-entrypoint.…"   About a minute ago   Up 3 seconds   80/tcp    restart-always-nginx
+````
+But, if you stop them befrorehand, 
+````
+docker stop restart-always-nginx unless-stopped-nginx
+````
+And restart your daemon, then check the status.
+````
+docker ps -a
+````
+You will see, only the container with restart-always policies restarted.          
+Output will be similar to;
+````
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS                      PORTS     NAMES
+c6b38bf5a3c2   nginx                                 "/docker-entrypoint.…"   2 minutes ago   Exited (0) 42 seconds ago             unless-stopped-nginx
+68ab3eb4c0e7   nginx                                 "/docker-entrypoint.…"   2 minutes ago   Up 19 seconds               80/tcp    restart-always-nginx
 ````
 You can see that only unless-stopped-nginx has been restarted. 
+We will talk about "on-failure" policy in next section.
+
+---
+
+#### 4.5.4 Health Check
+
+The Docker engine  determine if the container is in a state of abnormality by whether the main process in the container exits. 
+In many cases, this is fine, but if the program enters a deadlock state, or an infinite loop state,
+the application process does not exit, but the container is no longer able to provide services. 
+So, Docker did not detect this state of the container and would not reschedule it, 
+causing some containers to be unable to serve, but still accepting user requests.
+
+So, you might want to tell Docker how your container should be acting. 
+The HEALTHCHECK directive tells Docker how to determine if the state of the container is normal.
+
+Let's create a nginx container with custom health check command.
+````
+docker run -dit \
+--name nginx-health-care \
+-p 8080:80 \ 
+--health-cmd "curl localhost:80" \ 
+nginx
+````
+
 
 ---
 
