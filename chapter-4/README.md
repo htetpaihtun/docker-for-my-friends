@@ -145,7 +145,7 @@ You don't need to know about Podman at all but think I will mention it in later 
 
 ---
 
-### 4.2 Open Container Initiative
+#### 4.2 Open Container Initiative
 
 When talking about Docker and containers, **Open Container Initiative (OCI)** also play important part throughout the history of containers.
 
@@ -185,13 +185,13 @@ Docker underwent many design changes over the years to achieve what we had today
 
 ---
 
-### 4.3.1 Docker Client 
+#### 4.3.1 Docker Client 
 
 The Docker client `docker` is the primary way that many Docker users interact with Docker. When you use commands such as  `docker run` , the client sends these commands to dockerd, which carries them out.
 
 ---
 
-### 4.3.2 Docker Engine API 
+#### 4.3.2 Docker Engine API 
 
 Docker provides an RESTful API for interacting with the Docker daemon (the Docker Engine API), as well as SDKs for Go and Python. 
 The SDKs allow you to build and scale Docker apps and solutions quickly and easily. 
@@ -212,7 +212,7 @@ And point your browser to : `localhost:2375/$your_api_version/containers/json`
 
 ---
 
-### 4.3.3 Docker Daemon
+#### 4.3.3 Docker Daemon
 
 The Docker daemon (dockerd) listens for Docker API requests and manages Docker objects such as images, containers, networks, and volumes.
 It mainly implements:
@@ -265,7 +265,7 @@ Let's meet our new components.
 
 ---
 
-### 4.3.4 Containerd 
+#### 4.3.4 Containerd 
 
 **[Containerd](https://containerd.io/)** is an industry-standard container runtime with an emphasis on simplicity, robustness and portability.
 Containerd is available as a daemon for Linux and Windows. It manages the complete container lifecycle of its host system, from image transfer and storage to container execution and supervision to low-level storage to network attachments and beyond.
@@ -281,7 +281,7 @@ https://containerd.io/docs/getting-started/
 
 ---
 
-### 4.3.5 runC and shim 
+#### 4.3.5 runC and shim 
 
 **runC** is a lightweight, portable container runtime which implements OCI-runtime standard.
 It includes all of the plumbing code used by Docker to interact with system features related to containers. 
@@ -331,7 +331,7 @@ There are mainly 2 ways to get your images;
 
 --- 
 
-### 4.4.1 Image Registries
+#### 4.4.1 Image Registries
 
 Like we store out code in GitHub we store our images in [Docker hub](https://hub.docker.com/).
 [Docker Hub](https://hub.docker.com/) is one of the most popular registry and also default in Docker.
@@ -462,7 +462,7 @@ In output;
 ````
 This indicates there are 7 layers in the images. So, what are image layers?
 
-### 4.4.3 Images Layers
+#### 4.4.3 Images Layers
 
 A Docker image is just a bunch of loosely-connected read-only layers, with each layer comprising one or more
 files. 
@@ -517,7 +517,7 @@ So far we only have to know that
 
 ---
 
-### 4.4.4 Image Names and Tags 
+#### 4.4.4 Image Names and Tags 
 
 **Image names** usually come in the format: `registry/path/app-name:tag`. (neither of them is required)
 
@@ -562,6 +562,7 @@ Now we know about docker images which are technically stopped containers, let's 
 A **container** is the runtime instance of an image. In the same way that you can start a virtual machine (VM) from
 a virtual machine template, you can start one or more containers from a single image.
 
+---
 
 #### 4.5.1 Running Containers
 
@@ -933,6 +934,7 @@ We will learning about them in next chapter.
 Stateful applications that persist data are important in the world of cloud-native and microservices applications.			
 For this purpose, Docker provides 2 type of storage for us, non-persistent and persistent.
 
+---
 
 #### 4.6.1 Non-Persistent storage
 
@@ -1065,7 +1067,7 @@ also having your host system clean and isolated.
 Let's quickly make a go app that say hello.
 Create a file named main.go and edit with your favourite editor. 
 
-````
+```go
 package main
 
 import (
@@ -1075,7 +1077,7 @@ import (
 func main() {
 	fmt.Println("HELLO WORLD!")
 }
-````
+```
 And let's point this current directory to a go lang container.
 ````
 docker run -it --name go-dev-env -v $PWD/:/code/ golang 
@@ -1155,6 +1157,7 @@ Now, we know how to talk to containers via storage.
 Next step, is the network.
 
 ---
+
 ### 4.7 Docker Networks
 
 Docker runs applications inside of containers, and applications need to communicate over lots of different networks.
@@ -1443,6 +1446,8 @@ To sum up, we use;
 ---
 
 In next chapter, we will be using all of these components to make production-ready cloud-native applications.
+
+[Chapter 5 Hands-on with Docker](https://github.com/htetpaihtun/docker-for-my-friends/tree/main/chapter-5)
 
 ---
 
