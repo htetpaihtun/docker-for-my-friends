@@ -68,8 +68,24 @@ In this course, you will learn;
 	
 	5.1---- Containerization your application 
 	5.2---- Dockerfile
-	
-	
+	5.3.1-- FROM Instruction 
+	5.3.2-- ARG Instruction
+	5.3.3-- RUN Instruction 
+	5.3.4-- CMD Instruction
+	5.3.5-- LABEL Instruction 
+	5.3.6-- EXPOSE Instruction
+	5.3.7-- ENV Instruction
+	5.3.8-- ADD Instruction
+	5.3.9-- COPY Instruction
+	5.3.10- ENTRYPOINT Instruction
+	5.3.11- VOLUME Instruction 
+	5.3.12- USER Instruction 
+	5.3.13- WORKDIR Instruction
+	5.3.14- ONBUILD Instruction
+	5.3.15- STOPSIGNAL Instruction
+	5.3.13- HEALTHCHECK Instruction
+	5.3.14- SHELL Instruction
+	5.3.15- .dockerignore File
 	
 	
 ## Chapter 6    Multi-containers with docker-compose and docker stack
