@@ -147,7 +147,7 @@ You don't need to know about Podman at all but think I will mention it in later 
 
 ---
 
-#### 4.2 Open Container Initiative
+### 4.2 Open Container Initiative
 
 When talking about Docker and containers, **Open Container Initiative (OCI)** also play important part throughout the history of containers.
 
