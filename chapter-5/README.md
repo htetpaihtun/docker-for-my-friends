@@ -43,7 +43,9 @@ For example, if we want to see only container-id and their respective image of a
 docker ps --filter "status=exited" --format "table {{.ID}}\t{{.Image}}"
 ````
 As usual, please visit [the documentation page's formatting and log output section](https://docs.docker.com/config/formatting/) for more combination and format.
+
 You can also read about go-templates here : https://golangdocs.com/templates-in-golang.
+
 `--format` can also be used together with `inspect` commands too. 
 
 Another command you will be using frequently is `docker inspect`.
