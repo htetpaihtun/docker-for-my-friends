@@ -1177,6 +1177,8 @@ These include;
 - multi-host overlays
 - options for plugging into existing VLANs
 
+---
+
 #### 4.7.1 The Container Network Model (CNM)
 
 Libnetwork implements Container Network Model (CNM) which formalizes the steps required to provide networking for containers 
@@ -1197,6 +1199,8 @@ A **Network** is a group of Endpoints that are able to communicate with each-oth
 
 For full documentation: https://github.com/moby/libnetwork/blob/master/docs/design.md 
 
+---
+
 #### 4.7.2 Network Drivers
 
 libnetwork implements the control plane and management plane functions, and drivers implement the data plane. 			
@@ -1207,12 +1211,238 @@ On Linux, they include;
 - bridge
 - overlay
 - macvlan 
+ 
 On Windows, they include; 
 - nat
 - overlay
 - transparent
 - l2bridge
 
+libnetwork allows multiple network drivers to be active at the same time
+so that your Docker environment can sport a wide range of heterogeneous
+networks. 
 
+Let's start creating docker networks,
 
+The two simplest types of networks are 
+- Host networks  
+- Bridge networks 
+
+Before we start using networks, I would like to recommend this third-party debugging tool called "[Netshoot](https://hub.docker.com/r/nicolaka/netshoot)". 
+This image offers us many useful functions and we will be using this to debug and investigate our containers in future sections too. 
+
+So, let's take a look at its documentation: https://hub.docker.com/r/nicolaka/netshoot.
+You will find some use-case examples which are just enough for us.
+
+If you have networking/system admin background, you will definitely love this image. 
+But, we will be using only some of its features, just enough to monitor our networks and containers. 
+
+So far, this is the first non-official third party image we pull from dockerhub and in doing so, we need to be careful as malicious images can harm your system.
+But in this case, we will trust "nicolaka" and pull it directly.
+````
+docker pull nicolaka/netshoot
+````
+Let's actually start using networks. Before doing anything, we will first check docker networks on your host.
+````
+docker network ls 
+````
+You can see there's one network that docker automatically created for us. 
+This is the default network you use when you don't specify anything.
+````
+NETWORK ID     NAME      DRIVER    SCOPE
+8f4247893bb6   bridge    bridge    local
+````
+- "Driver" is the the network driver you will be using. 
+You can also see which containers are attached to specific network by using `docker volume inspect` command.
+
+Let's investigate its nature by attaching our "netshoot" container to it.
+````
+docker run -it --name net-shoot-bridge --network bridge nicolaka/netshoot
+````
+- `--network` option let us to choose which network we want to attach to. (default is bridge)
+ 
+You will be redirected to its shell and then we can start using its features there.
+Let's try simplest one first which is checking its network interfaces.
+````
+ifconfig
+````
+Output will be similar to;
+````
+eth0      Link encap:Ethernet  HWaddr 02:42:AC:11:00:04  
+          inet addr:172.17.0.4  Bcast:172.17.255.255  Mask:255.255.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:20 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:3475 (3.3 KiB)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+````
+We can see it has 2 network interfaces.
+
+Let's make another container side by side to investigate `host` network nature.
+````
+docker run -it --name net-shoot-host --network host nicolaka/netshoot
+````
+- `--network host` configures our container to have exact same network namespace with our host system.
+
+Let's run `ifconfig` command inside this container with `ifconfig` again.
+````
+docker0   Link encap:Ethernet  HWaddr 02:42:2E:92:A6:5A  
+          inet addr:172.17.0.1  Bcast:172.17.255.255  Mask:255.255.0.0
+          inet6 addr: fe80::42:2eff:fe92:a65a/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:17 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:65 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:2818 (2.7 KiB)  TX bytes:9988 (9.7 KiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:23416 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:23416 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:2056951 (1.9 MiB)  TX bytes:2056951 (1.9 MiB)
+...
+veth3c2784f Link encap:Ethernet  HWaddr A6:B1:DE:33:96:FD  
+          inet6 addr: fe80::a4b1:deff:fe33:96fd/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:17 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:66 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:3056 (2.9 KiB)  TX bytes:10359 (10.1 KiB)
+...
+wlp2s0    Link encap:Ethernet  HWaddr 3C:6A:A7:28:86:01  
+          inet addr:192.168.99.3  Bcast:192.168.99.255  Mask:255.255.255.0
+          inet6 addr: fe80::d6f3:342d:1f55:65bf/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:1321306 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:310708 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:977130198 (931.8 MiB)  TX bytes:60283940 (57.4 MiB)
+...
+````
+We will see there are many more network interfaces which are also exactly the same as our host system.
+(output will vary according to how many network interfaces you have on your system)
+
+But generally, you will see "eth0" and "lo" in containers that are attached to bridge type networks. 
+And you will see "docker0" "lo" and "wlp2s0" or "wlan0", if you have wifi device or "eth0" "eth1" "eth2" for cabled ethernet.
+- `eth0` means first ethernet interface. (Additional Ethernet interfaces would be named eth1, eth2, etc. 
+Like I mentioned earlier, Docker(libnetwork) creates a network stacks inside container sandbox which is separated from the host network stack.
+But in host network, it is usually your ethernet cable connection plugged in your host system.
+You have many of them on same host.
+- `lo` is a special network interface that the system uses to communicate with itself.
+You only can only have one `lo` interface per host.
+- wlan0 or wlp2s0 is the name of the first wireless network interface on the system. 
+Additional wireless interfaces would be named wlp2s1, wlp2s2, etc. 
+(wlan0, wlan1,.. is old naming convention used in older systems)
+You can have many of them also.
+- `veth` is "virtual ethernet" interfaces used as tunnel between different network namespaces.
+veth devices are always created in interconnected pairs. 
+You can have many of them too.
+- `docker0` is a virtual bridge interface created by Docker. 
+It randomly chooses an address and subnet from a private defined range. 
+All the Docker containers are connected to this bridge and use the NAT rules created by docker to communicate with the outside world.
+- you can have many more interface types also but these are the most common.
+
+We will also connect two container to a custom-network isolated from other containers and ping each other. 
+````
+docker network create --driver bridge private-network
+```` 
+You can set subnets, ip range and gateway as you like. to see more info use: `docker network create --help`.
+
+We'll create 2 container that will talk to each other.
+````
+docker run -it --name private-c1 --network private-network nicolaka/netshoot
+````
+First, in container 1, check its hostname and ip address at eth0 interface.
+````
+hostname 
+````
+This will be the same as container name.
+````
+ip addr show eth0 | grep inet
+````
+This will show ip address of container 1 at eth0.
+
+And create another container attached to same network.
+````
+docker run -it --name private-c2 --network private-network nicolaka/netshoot
+````
+And from this container, you can try and ping to container1 either using ip address or hostname or even container name (because Docker run internal DHCP server for all containers).
+````
+fping private-c2
+````
+You will get success message like this 
+````
+172.18.0.3 is alive
+````
+You can deattach from this container-2 and then attach to container-1 and try vice versa.
+
+If you want to make sure these two container can't be connected from different networks, 
+you can create another one with different network driver and then do the same. 
+````
+docker run -it --rm --name outsider --network bridge nicolaka/netshoot fping private-c1
+````
+You will notice containers with host driver network can always connect to your private containers but the others can't.
+
+You can inspect networks with 
+````
+docker network inspect private-network
+````
+Like volumes, you can remove unused networks with 
+````
+docker network prune
+````
+
+If you want to know how packets actaully flow between host's docker0, eth0, ... and container's eth0,
+you can quickly check out the top answer from : https://stackoverflow.com/questions/37536687/what-is-the-relation-between-docker0-and-eth0
+
+![docker network flow](https://user-images.githubusercontent.com/47061262/147269067-a95e2e23-8526-45de-ae53-cdb3ed18eb13.png)
+ *Figure 4.7.2 Docker engine overview network topology* 
+
+But we can also use more readable and powerful features provided by "netshoot" container since we're using it anyway.
+Again, for its full features, checkout: https://hub.docker.com/r/nicolaka/netshoot and follow instuctions there.
+I won't list instructions for all of them and prints output here, you can try youself as much as you want.
+I recommend testing : 
+-  `ss`, `netstat`, `socat`, `brctl`, `iftop` , `tcpdump` , `ngrep`
+to monitor and investigate your ports, network interfaces, packet flows and network devices
+- `drill` for DHCP 
+- `strace` to trace your processes
+- `fping`, `mtr` to ping services or hosts
+- `iperf` and `termshark` are a little bit advanced but powerful tools/
+
+We have talked about "bridge" and "host" network driver types. 
+These two, along with "overlay" networks are most common and simplest way to create container networks.
+
+**Overlay networks** connect multiple Docker daemons together and enable swarm services to communicate with each other. 
+You can also use overlay networks to facilitate communication between a swarm service and a standalone container, 
+or between two standalone containers on different Docker daemons. 
+This strategy removes the need to do OS-level routing between these containers. 
+We will explore futher more in Docker swarm chapter. 
+
+Other network drivers are :
+- **ipvlan**: give users total control over both IPv4 and IPv6 addressing.
+- **macvlan**: allow you to assign a MAC address to a container, making it appear as a physical device on your network. 
+- Other **Custom Network plugins**: You can install and use third-party network plugins with Docker. 
+These plugins are available from Docker Hub or from third-party vendors.
+
+To sum up, we use;
+- `bridge` to simply connect multiple containers
+- `host` to have the same network namespace as host system
+- `overlay` to connect containers across multiple nodes(machines) 
+
+---
+
+In next chapter, we will be using all of these components to make production-ready cloud-native applications.
+
+---
 
