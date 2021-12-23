@@ -736,7 +736,7 @@ docker rm -f my-nginx-server-1 my-nginx-server-2 my-nginx-server-3
 
 Tips: 
 > You should try and play around different containers using basic Linux commands such as `bash`, `ps`, `ls`, `apt`,`hostname` and more 
- via `docker exec -it` and `docker attach` to make youself familiar with containers. 
+ via `docker exec -it` and `docker attach` to make youself familiar with containers.  
 > Also don't forget to visit https://docs.docker.com/reference/ and use `docker --help` everything you need is there.
 
 Furthermore, we will investigate their lifecycle.
@@ -980,7 +980,8 @@ This is where persistent volumes came in.
 
  - Volumes enable multiple containers on different Docker hosts to access and share the same data.
 
-# ADDED FIGURES
+![single-vol](https://user-images.githubusercontent.com/47061262/147244735-a3429058-3e15-4cd4-bffd-be422896b99b.jpeg)
+*Figure 4.6.1 Simple Docker Volume*
 
 Let's start by creating a volume.
 ````
@@ -1053,10 +1054,13 @@ cat /vol/container-1.txt
 ````
 You can see the text we wrote earlier from container-1.
 
-Now, let's try binding our host system directory with a new container. 
+Now, let's try binding our host system directory with a new container.(mount binding) 
 I will show you how to make a dev enviorment with docker container.
 You can achieve this without having to install progamming languages and dependencies, 
 also having your host system clean and isolated.
+
+![mounts](https://user-images.githubusercontent.com/47061262/147245110-d808e48d-010b-4b9d-8f84-6ff50c31001b.png)
+*Figure 4.6.2 Docker Volume Mounts*
 
 Let's quickly make a go app that say hello.
 Create a file named main.go and edit with your favourite editor. 
@@ -1151,10 +1155,64 @@ Now, we know how to talk to containers via storage.
 Next step, is the network.
 
 ---
-### 4.6 Docker Networks
+### 4.7 Docker Networks
 
+Docker runs applications inside of containers, and applications need to communicate over lots of different networks.
+Docker also has strong networking capabilities to back it up. 
 
-ELP
+Docker networking is based on an open-source pluggable architecture called the Container Network Model (CNM). 
+libnetwork is Docker’s real-world implementation of the CNM, and it provides all of Docker’s core networking capabilities.
+
+libnetwork also provides a native service discovery and basic container load balancing solution.
+
+![CNN-Model-1](https://user-images.githubusercontent.com/47061262/147246124-a74e9c2b-ce43-42c6-86bb-bec5bc3deea3.png)
+*Figure 4.7.1 Docker Networking Model* 
+
+In end points, each container has its own fully-funtional network stacks like your own host.
+Drivers extend the model by implementing specific network topologies such as VXLAN overlay networks.
+
+Docker ships with a set of native drivers that deal with the most common networking requirements. 
+These include; 
+- single-host bridge networks
+- multi-host overlays
+- options for plugging into existing VLANs
+
+#### 4.7.1 The Container Network Model (CNM)
+
+Libnetwork implements Container Network Model (CNM) which formalizes the steps required to provide networking for containers 
+while providing an abstraction that can be used to support multiple network drivers. 					
+The CNM is built on 3 main components;
+
+**Sandbox**
+
+A **Sandbox** contains the configuration of a container's network stack. This includes management of the container's interfaces, routing table and DNS settings.
+
+**Endpoint**
+
+An **Endpoint** joins a Sandbox to a Network.
+
+**Network**
+
+A **Network** is a group of Endpoints that are able to communicate with each-other directly. 
+
+For full documentation: https://github.com/moby/libnetwork/blob/master/docs/design.md 
+
+#### 4.7.2 Network Drivers
+
+libnetwork implements the control plane and management plane functions, and drivers implement the data plane. 			
+Drivers are responsible for the actual creation of networks.
+
+Docker ships with several built-in drivers, known as native drivers or local drivers. 
+On Linux, they include; 
+- bridge
+- overlay
+- macvlan 
+On Windows, they include; 
+- nat
+- overlay
+- transparent
+- l2bridge
+
 
 
 
