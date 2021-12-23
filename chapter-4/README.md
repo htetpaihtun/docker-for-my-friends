@@ -1064,6 +1064,7 @@ You can achieve this without having to install progamming languages and dependen
 also having your host system clean and isolated.
 
 ![mounts](https://user-images.githubusercontent.com/47061262/147245110-d808e48d-010b-4b9d-8f84-6ff50c31001b.png)
+
 *Figure 4.6.2 Docker Volume Mounts*
 
 Let's quickly make a go app that say hello.
