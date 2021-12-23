@@ -1412,6 +1412,7 @@ If you want to know how packets actaully flow between host's docker0, eth0, ... 
 you can quickly check out the top answer from : https://stackoverflow.com/questions/37536687/what-is-the-relation-between-docker0-and-eth0
 
 ![docker network flow](https://user-images.githubusercontent.com/47061262/147269067-a95e2e23-8526-45de-ae53-cdb3ed18eb13.png)
+
  *Figure 4.7.2 Docker engine overview network topology* 
 
 But we can also use more readable and powerful features provided by "netshoot" container since we're using it anyway.
