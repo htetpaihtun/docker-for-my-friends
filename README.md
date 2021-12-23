@@ -66,8 +66,8 @@ In this course, you will learn;
 	
 ## Chapter 5 	Hands-on with docker 		
 	
-	5.1---- Containerization your application with Dockerfile
-	5.1.1-- 
+	5.1---- Containerization your application 
+	5.2---- Dockerfile
 	
 	
 	
