@@ -4,7 +4,7 @@ But first, we need to master `docker cli`.
 ### 5.1 Hacking Docker CLI 
 
 When you are new to docker nad just started using docker to do something, we should always do 2 things; 
-- `docker help ` and 
+- `docker help` and 
 - [Docker documentaion](https://docs.docker.com/) 
 
 `docker help` is a really handy command that eases our Docker cli experience.	
