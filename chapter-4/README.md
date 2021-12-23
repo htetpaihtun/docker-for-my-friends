@@ -2,6 +2,8 @@
 
 Before we start to look at Docker components. Let's learn about what actually is a container.
 
+---
+
 ### 4.1 What is a Linux container 
 
 As I mentioned before, in earlier years, Docker directly uses [Linux containers (LXC)](https://linuxcontainers.org/) as its runtime and then later dropped it.        
