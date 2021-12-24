@@ -1,4 +1,8 @@
 # docker-for-my-friends
+
+## This whole content is still under development and the contents will not be fully available yet. 
+## Please consider coming back later. Thanks for visiting. :) 
+
 Teaching docker to my friends. (:
 
 Hello this is "INTRODUCTION TO DOCKER FOR MY FRIENDS". 
