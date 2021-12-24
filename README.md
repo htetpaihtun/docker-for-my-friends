@@ -90,16 +90,24 @@ In this course, you will learn;
 	5.3.13- HEALTHCHECK Instruction
 	5.3.14- SHELL Instruction
 	5.3.15- .dockerignore File
-	
+	5.4---- Docker Build
+	5.4.1-- Multistage Build
 	
 ## Chapter 6    Multi-containers with docker-compose and docker stack
 
 	6.1---- docker-compose.yaml
 	6.2---- Packaging your app with docker-compose
+	6.3---- Docker Stack
 	
 ## Chapter 7 	Lets get REAL 				
 
 	7.1---- Build your own real-world docker application 
+
+
+## Chapter 8	Docker Swarm
+
+
+
 
 
 
