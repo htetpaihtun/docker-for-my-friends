@@ -1,6 +1,6 @@
 # docker-for-my-friends
 
-## This whole content is still under development and the contents will not be fully available yet. 
+## This whole content is still under development and the contents will not be fully available yet. Also won't be accepting/reviewing any pull request right now. 
 ## Please consider coming back later. Thanks for visiting. :) 
 
 Teaching docker to my friends. (:
