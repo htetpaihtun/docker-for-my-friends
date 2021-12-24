@@ -97,7 +97,7 @@ in a way you can ensure your code will run in same behaviour everywhere.
 You can also make your own dev environment completely in docker and it is also extremely portable! 
 So, Docker helps me build very reliable and powerful testing environments.
 
-Also, contaienrs are the fundamental building block of modern microservices. 
+Also, containers are the fundamental building block of modern microservices. 
 They serve as basic computing blocks for cloud-native applications. 
 As container orchestration technologies like Kubernetes are becoming more powerful and popular, containers become a must for scalable application development.
 
