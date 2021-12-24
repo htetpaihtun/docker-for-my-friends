@@ -171,13 +171,27 @@ Let's dive further..
 #### 5.3.1 FROM Instruction 
 
 The FROM INSTRUCTION initializes a new build stage and sets the Base Image for subsequent instructions.
-Every Dockerfile starts with at least one FROM instruction usually at the start as based image. 
+Every Dockerfile starts with at least one FROM instruction usually at the start as based image.
+
+The **base image** for your application provides the Linux libraries required by the application. 
+The base image that you choose affects the versatility, security, and efficiency of your container.
 
 You can use `FROM` instrcution with any image you like as long as it is pullable via Container Registry or locally exists.
 
-You will always want to use just minimum 
+You will always want to use just possibly smallest image just enough to run out application. 
+
+Let's create a Docker image with base image 'ubuntu' .
+In `Dockerfile`, 
+````
+FROM ubuntu
+````
+When using `FROM` instruction, a good practice is to include the exact image tag you want.
 
 
+and build with `docker build` command,
+````
+docker build -t my-ubuntu
+````
 
 
 #### 5.3.2 ARG Instruction
