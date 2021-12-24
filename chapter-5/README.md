@@ -506,8 +506,22 @@ We will be using this in a lot of scenario, it is best to stick to that format.
 
 
 
+---
+
+### 5.4 Docker build 
 
 
+
+
+---
+
+#### 5.4.1 Multistage builds
+
+
+
+
+
+---
 
 
 
