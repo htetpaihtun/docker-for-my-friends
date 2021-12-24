@@ -244,6 +244,8 @@ but rathers writes on top of the existing image (that image can also have multip
 In other words, it will not inheritates it but rather depends on it. 
 and tag it as whole new image.
 
+---
+
 #### 5.3.2 ARG Instruction
 
 `ARG` instructions are used together with `FROM` instructions.
@@ -254,6 +256,8 @@ ARG VERSION=20.04
 FROM ubuntu:$VERSION
 ````
 Note: An `ARG` declared before a `FROM` is outside of a build stage, so it can’t be used in any instruction after a `FROM` instruction.
+
+---
 
 #### 5.3.3 RUN Instruction 
 
@@ -324,6 +328,7 @@ CMD cat image_version
 Let's build `docker build -t my-image .` and run `docker run -it --rm my-iamge`
 Output : `latest` 
 
+---
 
 #### 5.3.5 LABEL Instruction 
 
@@ -377,32 +382,87 @@ docker run -p 80:80/tcp -p 80:80/udp my-image
 
 #### 5.3.7 ENV Instruction
 
-The ENV instruction sets the environment variable <key> to the value <value>. 
-This value will be in the environment for all subsequent instructions in the build stage and can be replaced inline in many as well. 
+The ENV instruction sets the environment variable.
+This value will be in the environment for all subsequent instructions in the build stage. 
 The value will be interpreted for other environment variables, so quote characters will be removed if they are not escaped.
-	
+
 Example:
-````
+````	
 ARG VERSION=20.04
 FROM ubuntu:$version
 ENV FOO="BAR"
 CMD echo $FOO
 ````
-Difference between `ARG` and `ENV` is that 
-`ARG` **will not persist** in its final image.
+Difference between `ARG`and `ENV` is that `ARG` **will not persist** in its final image.
 
 ---
 	
 #### 5.3.8 ADD Instruction
 
+The ADD instruction copies new files, directories or remote file URLs from source and adds them to the filesystem of the image at the path destination.
 
+Multiple source resources may be specified but if they are files or directories, 
+their paths are interpreted as relative to the source of the context of the build (Dockerfile).
 
-	
----
+Let's try building our go server app we wrote earlier.
+Our file directory will be like this:
+````
+├── app
+│   └── server.go
+└── Dockerfile
+````
+
+In Dockerfile;
+````
+FROM golang:latest
+ADD app/*.go /app/
+EXPOSE 8090
+CMD go run /app/server.go
+````
+And then build the image with;
+````
+docker build -t go-app . 
+````
+Then run it with;
+````
+docker run -d --name go-app -p 8090:8090 go-app
+````
+Test with;
+````
+curl localhost:8090
+````
+`COPY` instruction serves the same function as `ADD` but `ADD` provide two additional features.
+- you can use a URL instead of a local file/directory but while using remote location `ADD` won't provide any authentication.
+- you can extract tar from the source directory into the destination.
+
+Because image size matters, using `ADD` to fetch packages from remote URLs is strongly discouraged; 
+you should use `curl` or `wget` instead. 
+That way you can delete the files you no longer need after they’ve been extracted and you don’t have to add another layer in your image. 
+
+--- 
 	
 #### 5.3.9 COPY Instruction
 
+`COPY` instructions are generally the same as `ADD` instructions. 
 
+According to [the Dockerfile best practices guide](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#add-or-copy), 
+we should always prefer `COPY` over `ADD` unless we specifically need one of the two additional features of ADD.
+Using `ADD` command automatically expands tar files and certain compressed formats, 
+which can lead to unexpected files being written to the file system in our images.
+If you are copying local files to your Docker image, always use COPY because it’s more explicit.
+
+`ADD` and `COPY` instructions allow you to set permission on the files copied.
+
+So, we will just use `COPY` instead of `ADD`. and also investigate file permissions.
+In our Dockerfile.
+````
+FROM golang:latest
+COPY app/*.go /app/
+EXPOSE 8090
+CMD go run /app/server.go
+````
+
+---
 
 #### 5.3.10 ENTRYPOINT Instruction
 
