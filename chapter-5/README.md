@@ -171,7 +171,13 @@ Let's dive further..
 #### 5.3.1 FROM Instruction 
 
 The FROM INSTRUCTION initializes a new build stage and sets the Base Image for subsequent instructions.
-Every Dockerfile starts with at least one FROM instruction usually in very beginning. 
+Every Dockerfile starts with at least one FROM instruction usually at the start as based image. 
+
+You can use `FROM` instrcution with any image you like as long as it is pullable via Container Registry or locally exists.
+
+You will always want to use just minimum 
+
+
 
 
 #### 5.3.2 ARG Instruction
