@@ -115,7 +115,6 @@ Special mentions:
 - Recommendations from [kubernetes-Myanmar](https://blog.k8smm.org/) blog: https://blog.k8smm.org/tyro/gsc/ 
 - FOSS Myanmar: 
   - https://github.com/fossmyanmar/docker-quick-start
-  - https://devops-myanmar.gitbook.io/docker-quick-start/09-docker-network
-
+  - https://devops-myanmar.gitbook.io/docker-quick-start/
 ---
 
