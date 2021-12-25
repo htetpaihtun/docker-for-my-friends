@@ -28,7 +28,7 @@ Examples of resources are process IDs, hostnames, files, usernames, network acce
 Any individual process can only view or use the namespace associated with that particular process.
 
 On Linux, you can check your system's namespace by following command:
-```SHELL
+```Shell
 lsns
 ```
 example output:
