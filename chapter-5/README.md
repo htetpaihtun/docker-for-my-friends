@@ -538,38 +538,84 @@ RUN useradd -u 1001 app_user
 USER app_user
 CMD id
 ```
-It's best practice to set user permissions to your files and set to that user while running your application. 
-For example,
+It's best practice to set user permissions to your files and set to that user while running your application.
 
 ---
 
 #### 5.3.13 WORKDIR Instruction
 
-The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. 
-If the WORKDIR doesn’t exist, it will be created even if it’s not used in any subsequent Dockerfile instruction.
-You can have many `WORKDIR` instructions in your Dockerfile according to your successive instructions.
+The `WORKDIR` instruction sets the working directory for any `RUN`, `CMD`, `ENTRYPOINT`, `COPY` and `ADD` instructions that follow it in the Dockerfile. 
+If the `WORKDIR` doesn’t exist, it will be created even if it's not used in any subsequent Dockerfile instruction.
+You can have more than one `WORKDIR` instructions in your Dockerfile according to the needs of your successive instructions.
+```Dockerfile
+FROM ubuntu:20.04
+WORKDIR /work
+CMD pwd
+```
+
+---
 
 #### 5.3.14 ONBUILD Instruction
 
+The `ONBUILD` instruction adds to the image a trigger instruction to be executed at a later time, when the image is used as the base for another build. 
 
+---
 
 #### 5.3.15 STOPSIGNAL Instruction
 
+The STOPSIGNAL instruction sets the system call signal that will be sent to the container to exit. 
+This signal can be a signal name in the format `SIG<NAME>`. (e.g. SIGKILL)
 
+---
 
 #### 5.3.13 HEALTHCHECK Instruction
 
+The HEALTHCHECK instruction tells Docker how to test a container to check that it is still working. 
+This can detect cases such as a web server that is stuck in an infinite loop and unable to handle new connections, 
+even though the server process is still running.
+`HEALTHCHECK` instructions look like this;
+```Dockerfile
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD curl -f http://localhost/health || exit 1
+```
+You can also disble any healthcheck inherited from the base image
 
+---
 
 #### 5.3.14 SHELL Instruction
 
+The SHELL instruction allows the default shell used for the shell form of commands to be overridden. 
 
+The SHELL instruction is particularly useful on Windows where there are two commonly used and quite different native shells: cmd and powershell
 
+---
 
 #### 5.3.15 .dockerignore File
 
+Before the docker CLI sends the context to the docker daemon, it looks for a file named `.dockerignore` in the root directory of the context. 
+If this file exists, the CLI modifies the context to exclude files and directories that match patterns in it. 
+This helps to avoid unnecessarily sending large or sensitive files and directories to the daemon and potentially adding them to images using `ADD` or `COPY`.
+Example `.dockerignore` file looks like;
+````
+*/temp*
+temp?
+*.md
+````
+---
 
+Best practices refrences I usually look up to:
 
+https://developers.redhat.com/articles/2021/11/11/best-practices-building-images-pass-red-hat-container-certification
+
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/ 
+
+https://sysdig.com/blog/dockerfile-best-practices/
+
+If you are interested about microservices, you might be checking out 12 factor applications.
+
+Building 12 factor apps with Docker: https://github.com/docker/labs/tree/master/12factor
+
+Official document: https://12factor.net/
 
 ---
 
@@ -580,11 +626,6 @@ You can have many `WORKDIR` instructions in your Dockerfile according to your su
 
 ---
 
-Best practices refrences I usually look up to:
-
-https://developers.redhat.com/articles/2021/11/11/best-practices-building-images-pass-red-hat-container-certification
-https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html-single/recommended_practices_for_container_development/index
-https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 
 ---
 
