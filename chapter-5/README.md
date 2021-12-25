@@ -186,15 +186,15 @@ You will always want to use just possibly smallest image just enough to run out 
 
 Let's create a Docker image with base ubuntu image. 
 In `Dockerfile`, 
-````
+```Dockerfile
 FROM ubuntu:20.04 
-````
+```
 When using `FROM` instruction, a good practice is to include the exact image tag you want. 
 By default, Docker will pull image from Dockerhub with 'latest` tag.
 If you want to specify other registry, you can use something like this :
-````
+```Dockerfile
 FROM registry.access.redhat.com/ubi8/ubi:8.1
-````
+```
 Defining exact image tag and registry provides your app more stablity.
 When using 'latest' tag, if provider releases another version with latest tag, you will have to pull that image and 
 this is not optimal for image layer caching which we will talk about in later sections.
@@ -251,10 +251,10 @@ and tag it as whole new image.
 `ARG` instructions are used together with `FROM` instructions.
 `FROM` instructions support variables that are declared by any `ARG` instructions that occur before the first FROM.
 For example, you can do something like this in our `Dockerfile`:
-````
+```Dockerfile
 ARG VERSION=20.04
 FROM ubuntu:$VERSION
-````
+```
 Note: An `ARG` declared before a `FROM` is outside of a build stage, so it can’t be used in any instruction after a `FROM` instruction.
 
 ---
@@ -265,12 +265,12 @@ The RUN instruction will execute any commands in a new layer on top of the curre
 The resulting committed image will be used for the next step in the Dockerfile.
 This is one of the INSTRUCTION types that adds extra layers , since we manipulate the base image's filesystem and enviornment.
 Let's include something like this in our `Dockerfile`:
-````
+```Dockerfile
 ARG VERSION=20.04
 FROM ubuntu:$version
 ARG VERSION
 RUN echo $version > image_version
-````
+```
 - `echo $version > image_version` command writes `$version` to `image_version` file.
 - `ARG VERSION` is added to demonstrate how `ARG defined before `FROM` instruction can't further be used in later instruction.
 
@@ -285,13 +285,13 @@ In shell form, the command is run in a shell, with `/bin/sh -c` on Linux based c
 The exec form makes it possible to avoid shell string munging, and to RUN commands using a base image that does not contain the specified shell executable.
 
 So, following `RUN` instruction in shell form (say we use Linux-based containers); 
-````
+```Dockerfile
 RUN echo $PWD
-````
+```
 Would be the same as this in exec form; 
-````
+```Dockerfile
 RUN [["/bin/bash", "-c", "echo", $PWD ]
-````
+```
 
 The RUN instruction will execute any commands in a new layer on top of the current image and commit the results. 
 The resulting committed image will be used for the next step in the Dockerfile.
@@ -300,14 +300,14 @@ Layering RUN instructions and generating commits conforms to the core concepts o
 
 Since `CMD` adds extra layers to your image, you might want to reduce `CMD` instructions as much as possible.
 You might want to do something like this most of the time;
-````
+```Dockerfile
 RUN apk update ; apk upgrade  
-````
+```
 or 
-````
+```Dockerfile
 RUN apk update \ 
 apk upgrade
-````
+```
 ---
 
 #### 5.3.4 CMD Instruction
@@ -318,13 +318,13 @@ These defaults can include an executable, or they can omit the executable, in wh
 Like `RUN` instructions, `CMD` instructions also have shell form and exec form.
 
 Let's try using one in our `Dockerfile`;
-````
+```Dockerfile
 ARG VERSION=latest
 FROM ubuntu:$VERSION
 ARG VERSION
 RUN echo $VERSION > image_version
 CMD cat image_version
-````
+```
 Let's build `docker build -t my-image .` and run `docker run -it --rm my-iamge`
 Output : `latest` 
 
@@ -335,12 +335,12 @@ Output : `latest`
 The LABEL instruction adds metadata to an image as a key-value pairs.
 
 For examples:
-````
+```Dockerfile
 LABEL "maintainer"="htetpainghtun" \
 	"app_name"="test app" \ 
 	"cool"="true" \
 	"description"="Cool test app"
-````
+```
 Now, your image is more documented and you can easily filter using labels.
 
 "Docker, show me all the cool app images" 
@@ -369,10 +369,10 @@ use the -p flag on docker run to publish and map one or more ports,
 or the -P flag to publish all exposed ports and map them to high-order ports.
 
 It can be something like this.
-````
+```Dockerfile
 EXPOSE 80/tcp
 EXPOSE 80/udp
-````
+```
 And then in `docker run` command;
 
 ````
@@ -387,12 +387,12 @@ This value will be in the environment for all subsequent instructions in the bui
 The value will be interpreted for other environment variables, so quote characters will be removed if they are not escaped.
 
 Example:
-````	
+```Dockerfile
 ARG VERSION=20.04
 FROM ubuntu:$version
 ENV FOO="BAR"
 CMD echo $FOO
-````
+```
 Difference between `ARG`and `ENV` is that `ARG` **will not persist** in its final image.
 
 ---
@@ -413,12 +413,12 @@ Our file directory will be like this:
 ````
 
 In Dockerfile;
-````
+```Dockerfile
 FROM golang:latest
 ADD app/*.go /app/
 EXPOSE 8090
 CMD go run /app/server.go
-````
+```
 And then build the image with;
 ````
 docker build -t go-app . 
@@ -445,44 +445,109 @@ That way you can delete the files you no longer need after they’ve been extrac
 
 `COPY` instructions are generally the same as `ADD` instructions. 
 
+`ADD` and `COPY` instructions allow you to set permission on the files copied with `--chown` flag: 
+```Dockerfile
+COPY --chown appuser:appuser . .
+```
+Although you can use `RUN` instructions to manually create user and manipulate file permissions,
+just for adding user, we can use `USER` instruction.
+Some images ship with default users, you can check by running their container with `cat /etc/passwd` or simply reading their documentation.
+
 According to [the Dockerfile best practices guide](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#add-or-copy), 
 we should always prefer `COPY` over `ADD` unless we specifically need one of the two additional features of ADD.
 Using `ADD` command automatically expands tar files and certain compressed formats, 
 which can lead to unexpected files being written to the file system in our images.
 If you are copying local files to your Docker image, always use COPY because it’s more explicit.
 
-`ADD` and `COPY` instructions allow you to set permission on the files copied.
-
-So, we will just use `COPY` instead of `ADD`. and also investigate file permissions.
+We will just use `COPY` instead of `ADD`. and investigate file permissions.
 In our Dockerfile.
-````
+```Dockerfile
 FROM golang:latest
-COPY app/*.go /app/
+COPY --chown=USER app/*.go /app/
 EXPOSE 8090
-CMD go run /app/server.go
-````
+CMD ls -al /app
+```
+
+`ADD` and `COPY` instuction sources are not limited to host filesystem and you can copy files from other image's filesystem.
+We will utilise it in multistage build section.
 
 ---
 
 #### 5.3.10 ENTRYPOINT Instruction
 
+The best use for ENTRYPOINT is to set the image’s main command, 
+allowing that image to be run as though it was that command (and then use CMD as the default flags).
 
-*Note* :If `CMD` is used to provide default arguments for the ENTRYPOINT instruction, 
+Like`RUN`, `CMD` and `SHELL`, `ENTRYPOINT` has two form; exec and shell.
+
+*Note* :If `CMD` is used to provide default arguments for the ENTRYPOINT instruction,
 both the `CMD` and `ENTRYPOINT` instructions should be specified with the JSON array format. 
 We will be using this in a lot of scenario, it is best to stick to that format.
 
+Example:
+```Dockerfile
+FROM ubuntu:latest
+ENTRYPOINT ["ls", "-al"]
+CMD ["/etc/"]
+```
+This image will print all the files under `/etc/` from the container when you run :
+````
+docker build -t ubuntu-file-list
+docker run ubuntu-file-list 
+````
+But if we run,
+````
+docker run ubuntu-file-list /bin/ 
+````
+It will print files under `/bin` directory.
+`ENTRYPOINT` will also effect when you are using `docker exec` command.
+
+----
+
 #### 5.3.11 VOLUME Instruction 
 
+The VOLUME instruction creates a mount point with the specified name and marks it as holding externally mounted volumes from native host or other containers. 
+The value can be a JSON array, `VOLUME ["/var/log/"]`, 
+or a plain string with multiple arguments, such as `VOLUME /var/log` or `VOLUME /var/log /var/db`.
 
+For example,
+```Dockerfile
+FROM ubuntu
+RUN mkdir /myvol
+RUN echo "hello world" > /myvol/greeting
+VOLUME /myvol
+```
+
+This Dockerfile results in an image that causes `docker run` to create a new mount point at `/myvol` and copy the greeting file into the newly created volume.
+The host directory is declared at container run-time: The host directory (the mountpoint) is, by its nature, host-dependent. 
+This is to preserve image portability, since a given host directory can’t be guaranteed to be available on all hosts. 
+For this reason, you can’t mount a host directory from within the Dockerfile. 
+The VOLUME instruction does not support specifying a host-dir parameter. 
+You must specify the mountpoint when you create or run the container.
+
+---
 
 #### 5.3.12 USER Instruction 
 
+The USER instruction sets the user name (or UID) and optionally the user group (or GID) 
+to use when running the image and for any RUN, CMD and ENTRYPOINT instructions that follow it in the Dockerfile.
+For example,
+```Dockerfile
+FROM ubuntu:20.04
+RUN useradd -u 1001 app_user
+USER app_user
+CMD id
+```
+It's best practice to set user permissions to your files and set to that user while running your application. 
+For example,
 
+---
 
 #### 5.3.13 WORKDIR Instruction
 
-
-
+The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. 
+If the WORKDIR doesn’t exist, it will be created even if it’s not used in any subsequent Dockerfile instruction.
+You can have many `WORKDIR` instructions in your Dockerfile according to your successive instructions.
 
 #### 5.3.14 ONBUILD Instruction
 
@@ -512,6 +577,14 @@ We will be using this in a lot of scenario, it is best to stick to that format.
 
 
 
+
+---
+
+Best practices refrences I usually look up to:
+
+https://developers.redhat.com/articles/2021/11/11/best-practices-building-images-pass-red-hat-container-certification
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html-single/recommended_practices_for_container_development/index
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 
 ---
 
