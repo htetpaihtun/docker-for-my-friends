@@ -28,9 +28,9 @@ Examples of resources are process IDs, hostnames, files, usernames, network acce
 Any individual process can only view or use the namespace associated with that particular process.
 
 On Linux, you can check your system's namespace by following command:
-        
-        lsns
-
+```SHELL
+lsns
+```
 example output:
 ````
         NS TYPE   NPROCS   PID USER          COMMAND
@@ -198,6 +198,7 @@ The Docker client `docker` is the primary way that many Docker users interact wi
 Docker provides an RESTful API for interacting with the Docker daemon (the Docker Engine API), as well as SDKs for Go and Python. 
 The SDKs allow you to build and scale Docker apps and solutions quickly and easily. 
 If Go or Python don’t work for you, you can use the Docker Engine API directly via `wget` or `curl`, or the HTTP library which is part of most modern programming languages.
+
 *For more information about SDKs, visits: https://docs.docker.com/engine/api/sdk/*
 
 You can simply send requests to your Docker engine API with following steps;
@@ -240,11 +241,6 @@ On any system with docker installed:
 
 *We don't normally communicate with Docker daemon this way. This is rather for debugging and advanced configuration purpose. We do it via docker-cli.*
 
-![docker daemon](http://blog.itaysk.com/images/2018-02-06-the-hitchhickers-guide-to-the-container-galaxy_2.png)
-
-  _Figure 4.3.1 docker daemon_
-  
-
 Initially, Docker daemon is the one making all the jobs around Docker and thus leading to monolithic nature of Docker. 
 This monolithic feature of Docker daemon becomes problematic because: 
 - It's hard to innovate on
@@ -258,10 +254,9 @@ These specialized tools can be swapped out, as well as easily re-used by third p
 small specialized tools that can be pieced together into larger tools
 The major components that make up the Docker engine are the Docker daemon, containerd, runc and other networking and storage plugins.*
 
-
 ![docker_oci](https://user-images.githubusercontent.com/47061262/146834416-c754c05d-634b-4f0f-895d-3c6c076b4943.png)
 
- *Figure 4.3.2 Docker workflow overview*
+ *Figure 4.3.1 Docker workflow overview*
 
 Let's meet our new components.
 
@@ -278,8 +273,7 @@ It achieves this via two steps;
 - recive instruction to create containers 
 - instruct runC to create container 
 
-Getting started with Containerd? 
-https://containerd.io/docs/getting-started/
+Getting started with Containerd: https://containerd.io/docs/getting-started/
 
 ---
 
@@ -291,7 +285,6 @@ In docker, it is the thing that actually creates your containers with instructio
 runC is just here to create containers and after this, it exits and shim become container's parent process.             
 
 runC is the de facto implementation of OCI-runtime and is donated to [CNCF](https://www.cncf.io/) by Docker. 
-
 
 The **shim** is integral to the implementation of daemonless containers (what we just mentioned about decoupling
 running containers from the daemon for things like daemon upgrades).
@@ -463,6 +456,8 @@ In output;
 ...           
 ````
 This indicates there are 7 layers in the images. So, what are image layers?
+
+---
 
 #### 4.4.3 Images Layers
 
