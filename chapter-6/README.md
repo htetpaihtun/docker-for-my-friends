@@ -19,6 +19,12 @@ Docker Compose lets you describe an entire app in a single declarative conﬁgur
 Once the app is deployed, you can manage its entire lifecycle with a simple set of commands. 
 You can even storeand manage the conﬁguration file in a version control system.
 
+Compose has commands for managing the whole lifecycle of your application:
+- Start, stop, and rebuild services
+- View the status of running services
+- Stream the log output of running services
+- Run a one-off command on a service
+
 Fig was a powerful tool, created by a company called Orchard.
 Docker, Inc. accquired Orchard, the company and re-branded Fig as Docker Compose.
 
@@ -32,13 +38,49 @@ Docker, Inc. accquired Orchard, the company and re-branded Fig as Docker Compose
 YAML: YAML Ain't Markup Language™
 
 What It Is:
-  YAML is a human-friendly data serialization
-  language for all programming languages.
+  YAML is a human-friendly data serialization language for all programming languages.
+  YAML is popular mainly because it is human-readable and easy to understand. 
+  It can also be used in conjunction with other programming languages.
+  YAML is also a superset of JSON.
+  
+Use_case:
+  YAML is commonly used for configuration files and 
+  in applications, where data is being stored or transmitted.
+  As they're very popular in cloud-native devops tools, 
+  most popolar configuration management tools (ansible), 
+  CICD tools (Gitlab-CI),
+  and container orchestration tools (Kubernetes, Docker Swarm)
+  as their main data format.
 ```
 
 ----
 
 #### Compose Files
 
-`docker-compose.yaml` is 
+Compose files defines how your application's overview architecture should looks like. 
+It is self-documenting and serves as bridge between devlopment and operation sides.
+
+Compose uses YAML ﬁles to deﬁne multi-service applications.
+`docker-compose,yaml` files has 4 top-level keys:
+- version
+- services
+- networks
+- volumes
+
+In Dockerfiles, we can't directly bind ports or mount volumes because Dockerfiles only build images.
+In Compose files, we can do them as they run container directly but the images you defined in Compose files must be built first.(You can't use Dockerfiles)
+
+Using Docker Compose properly, alone satisfies many specifications of "12-factors app methodology for building software-as-a-service apps".
+
+---
+
+### Running Multi-containers Applications
+
+example 
+
+
+
+---
+
+#### Docker Swarm 
 
