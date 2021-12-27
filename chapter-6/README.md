@@ -7,7 +7,7 @@ This is where "Docker Compose" comes in.
 
 ---
 
-###  Docker Compose
+###  6.1 Docker Compose
  
 Compose is a tool for defining and running multi-container Docker applications. 
 
@@ -28,33 +28,7 @@ Docker, Inc. accquired Orchard, the company and re-branded Fig as Docker Compose
 
 ---
 
-#### YAML
-
-```YAML
-%YAML 1.2
----
-YAML: YAML Ain't Markup Language™
-
-What It Is:
-  YAML is a human-friendly data serialization language for all programming languages.
-  YAML is popular mainly because it is human-readable and easy to understand. 
-  It can also be used in conjunction with other programming languages.
-  YAML is also a superset of JSON.
-  
-Use_case:
-  YAML is commonly used for configuration files and 
-  in applications, where data is being stored or transmitted.
-  As they're very popular in cloud-native devops tools, 
-  most popolar configuration management tools (ansible), 
-  CICD tools (Gitlab-CI),
-  and container orchestration tools (Kubernetes, Docker Swarm)
-  as their main data format.
----
-```
-
----
-
-### Running Multi-containers Applications
+### 6.2 Running Multi-containers Applications
  
 We have been working with single container applications.
 Also we have learn't how to make them talk to each other.
@@ -114,7 +88,33 @@ To make things simple, with Docker Compose;
 
 ---
 
-#### Compose Files
+#### 6.3 YAML
+
+```YAML
+%YAML 1.2
+---
+YAML: YAML Ain't Markup Language™
+
+What It Is:
+  YAML is a human-friendly data serialization language for all programming languages.
+  YAML is popular mainly because it is human-readable and easy to understand. 
+  It can also be used in conjunction with other programming languages.
+  YAML is also a superset of JSON.
+  
+Use_case:
+  YAML is commonly used for configuration files and 
+  in applications, where data is being stored or transmitted.
+  As they're very popular in cloud-native devops tools, 
+  most popolar configuration management tools (ansible), 
+  CICD tools (Gitlab-CI),
+  and container orchestration tools (Kubernetes, Docker Swarm)
+  as their main data format.
+---
+```
+
+---
+
+#### 6.4 Compose Files
 
 Compose files defines how your application's overview architecture should looks like. 
 It is self-documenting and serves as bridge between devlopment and operation sides.
@@ -220,7 +220,7 @@ the Compose file format, visit: https://docs.docker.com/compose/compose-file/com
 
 ---
 
-#### Service Configuration References
+#### 6.5.1 Service Configuration References
 
 In `services` section, we define the list of services (or containers) we want to run as part of our application.
 
@@ -327,7 +327,7 @@ If you mount a host path as part of a definition for a single service, and there
 
 ---
 
-#### Network Configuration References
+#### 6.5.2 Network Configuration References
 
 In `networks` section, we define networks we want to use, 
 if it exists Docker will use it, 
@@ -370,7 +370,7 @@ docker-compose up does not attempt to create it, and raises an error if it doesn
 
 ---
 
-#### Secret Configuration References
+#### 6.5.3 Secret Configuration References
 
 Docker also has special object called `secrets` to define our sensitive information.
 The top-level secrets declaration defines or references secrets that can be granted to the services in this stack. 
@@ -386,9 +386,6 @@ secrets:
 ```
 
 ---
-
-#### Docker Swarm 
-
 
 
 
