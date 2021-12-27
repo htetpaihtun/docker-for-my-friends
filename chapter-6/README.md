@@ -67,19 +67,18 @@ The work flow is like this;
   - Tag the image
   - Push it to container registry
 
-- Start containers (`docker run`)
- - Define container runtime related configurations
-  - passes commands
-  - networks
-  - volumes
-  - ports
-
-- Manage Lifecycle
- - check logs (`docker logs`)
- - debug by logging to containers (`docker exec`)
- - stopping containers
- - restarting containers
- - removing containers
+- Manage container lifecycle
+  - Start containers (`docker run`)
+    - passes commands
+    - create networks 
+    - volumes mounting
+    - ports binding 
+  - Monitor containers
+    - check logs (`docker logs`)
+    - debug by logging to containers (`docker exec`)
+  - Stopping containers
+  - Restarting containers
+  - Removing containers
 
 There's so much to do just to run a single container. (we haven't even talk about scaling yet)
 In real world microservices applications, in small startups, you might want to have like 30-50 containers running.
