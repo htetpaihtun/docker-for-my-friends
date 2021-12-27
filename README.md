@@ -94,20 +94,28 @@ In this course, you will learn;
 	5.4.14- SHELL Instruction
 	5.4.15- .dockerignore File
 	5.5---- Docker Build
-	5.5.1-- Multistage Build
+	5.5.1-- Multi-stage Build
 	
-## Chapter 6    Multi-containers with docker-compose and docker stack
+## Chapter 6    Multi-containers with docker-compose
 
-	6.1---- docker-compose.yaml
-	6.2---- Packaging your app with docker-compose
-	6.3---- Docker Stack
+	6.1---- Docker Compose
+	6.2---- Running Multi-containers Applications
+	6.3---- YAML
+	6.4---- Compose Files
+	6.5.1-- Service Configuration References
+	6.5.2-- Network Configuration References
+	6.5.3-- Secret Configuration References
 	
-## Chapter 7 	Lets get REAL 				
+## Chapter 7 	Docker Swarm with Docker Stack
 
-	7.1---- Build your own real-world docker application 
+	7.1---- Docker Swarm
+	7.2---- Docker Stack
+	
+	
+## Chapter 8 	Lets get REAL 				
 
-
-## Chapter 8	Docker Swarm
+	8.1---- Build your own real-world docker application 
+	
 
 
 
