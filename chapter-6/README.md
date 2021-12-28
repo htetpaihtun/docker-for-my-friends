@@ -387,19 +387,76 @@ secrets:
 
 ---
 
+### 6.6 Managing Applications with Docker Compose
 
+With Docker Compose, You can use compose subcommand, `docker-compose`, to build and manage multiple services in Docker containers. 
 
+After writing `docker-compose.yaml`, you can start all the containers up by single command `docker-compose up`.
 
+Let's try to start our example application.
+````
+docker-compose up -d 
+````
+`-d` option means run in background. (detached)
 
+You will get a message like this; 
+````
+Creating network "example-mern-app_mern-app" with driver "bridge"
+Creating example-mern-app_react-app_1  ... done
+Creating example-mern-app_mongo_1     ... done
+Creating example-mern-app_api-server_1 ... done
+````
+We can do `docker ps` here.
+But, `docker-compose ps` is also there to help up manage services in cleaner style.
+````
+docker-compose ps 
+````
+You will get output like this;
+````
+            Name                           Command              State              Ports            
+----------------------------------------------------------------------------------------------------
+example-mern-app_api-server_1   docker-entrypoint.sh index.js   Up      0.0.0.0:5000->5000/tcp,:::50
+                                                                        00->5000/tcp                
+example-mern-app_mongo_1        docker-entrypoint.sh mongod     Up      0.0.0.0:27017->27017/tcp,:::
+                                                                        27017->27017/tcp            
+example-mern-app_react-app_1    docker-entrypoint.sh yarn       Up      0.0.0.0:3000->3000/tcp,:::30
+                                ...                                     00->3000/tcp                
+````
+You can use `docker-compose top` to see running process inside each containers.
 
+You can log in to each docker containers with `docker-compose exec ...`.
 
+You can bring all the services, attached networks and other related things down with 
+````
+docker-compose down 
+````
+Notice that volume is not removed. 
+If we want to specifically remove volumes, we have to add `-v` option.
+````
+docker-compose down -v 
+````
+This will delete all the persistent data you produced, so beware.
 
+`docker-compose restart` to restart all services up again.
 
+You could do `docker-compose build` to build the image we defined in build section, in docker-compose.yaml.
 
+You can also pull/push images with `docker-compose pull` and `docker-compose push`.
 
+Keep in mind that, while using docker-compose to manage multiple services with one command, you can also target desired service. 
+This can come in handy sometimes.
 
+With `docker-compose`. you can even scale services easily with `--scale` options. 
+But the port will clash if we are mapping the same host port to many container ports.
+We will talk about it later.
 
+---
 
+Docker Compose is cool and all but still lacks edition control features to be called complete container orchestraction tool.
+Docker Stack is very similar to Docker Compose but better.
+In next chapter, we will look forward to Docker Stack.
+
+---
 
 
 
