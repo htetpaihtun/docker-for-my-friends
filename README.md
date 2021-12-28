@@ -15,6 +15,7 @@ Also I will add some additional information about best practices, my own practic
 This course will cover all you need to know and all you might want to know about Docker.
 Enjoy.. 
 
+<!-- 
 In this course, you will learn;
 - Overview of Containerization technologies and the evolution of software virtaulization.
 - Architecture and concepts of Docker.
@@ -22,6 +23,7 @@ In this course, you will learn;
 - How to build, run and maintain images and containers.
 - Running multi-containers with Docker-compose and Docker stack. 
 - Hands-on examples and best practices.
+ -->
 
 ## Contents: 
 
@@ -96,7 +98,7 @@ In this course, you will learn;
 	5.5---- Docker Build
 	5.5.1-- Multi-stage Build
 	
-## Chapter 6    Multi-containers with docker-compose
+## Chapter 6    Multi-containers with Docker Compose
 
 	6.1---- Docker Compose
 	6.2---- Running Multi-containers Applications
@@ -105,20 +107,19 @@ In this course, you will learn;
 	6.5.1-- Service Configuration References
 	6.5.2-- Network Configuration References
 	6.5.3-- Secret Configuration References
+	6.6---- Managing Applications with Docker Compose
+	6.7---- Lab Session
 	
 ## Chapter 7 	Docker Swarm with Docker Stack
 
 	7.1---- Docker Swarm
+	7.1.1-- Docker Swarm Features
+	7.1.2-- Swarm Mode
+	7.1.3-- Docker Services
+	7.1.4-- Docker Secrets and Configs
 	7.2---- Docker Stack
-	
 	
 ## Chapter 8 	Lets get REAL 				
 
 	8.1---- Build your own real-world docker application 
 	
-
-
-
-
-
-
