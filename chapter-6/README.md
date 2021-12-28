@@ -120,15 +120,9 @@ Compose files defines how your application's overview architecture should looks 
 It is self-documenting and serves as bridge between devlopment and operation sides.
 
 Compose uses YAML ﬁles to deﬁne multi-service applications.
-`docker-compose.yaml` files has 4 top-level keys:
-- version
-- services
-- networks
-- volumes
-- secrets
-other top-level keys such as `config `also exists
 
 In Dockerfiles, we can't directly bind ports or mount volumes because Dockerfiles only build images.
+With compose, we can provide image build context in docker-compose.yaml.
 
 Let's take a look at an example MERN stack application here. 
 MERN application is the one that is made with MongoDatabase + ExpressJS + ReactJS + NodeJS.
@@ -217,6 +211,8 @@ You should normally use the latest version.
 It’s important to note that the versions key does not deﬁne the version of Docker Compose or the Docker Engine. 
 For information regarding compatibility between versions of the Docker Engine, Docker Compose, and
 the Compose file format, visit: https://docs.docker.com/compose/compose-file/compose-versioning
+
+Let's take a look at its top-level keywords.
 
 ---
 
@@ -384,7 +380,6 @@ secrets:
   db_root_password:
      file: db_root_password.txt
 ```
-
 ---
 
 ### 6.6 Managing Applications with Docker Compose
