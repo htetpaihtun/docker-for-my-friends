@@ -24,7 +24,7 @@ Compose has commands for managing the whole lifecycle of your application:
 - Run a one-off command on a service
 
 Fig was a powerful tool, created by a company called Orchard.
-Docker, Inc. accquired Orchard, the company and re-branded Fig as Docker Compose.
+Docker, Inc. accquired Orchard and re-branded Fig as Docker Compose.
 
 ---
 
