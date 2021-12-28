@@ -453,9 +453,14 @@ In next chapter, we will look forward to Docker Stack.
 
 ---
 
+### 6.7 Lab Section
 
+Now, we have learnt all necessary concepts to actually make application with Docker.
+Let's follow this official Docker docs tutorial.
 
+https://docs.docker.com/get-started/
 
+---
 
 
 
