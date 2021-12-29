@@ -116,5 +116,9 @@ Special mentions:
 - FOSS Myanmar: 
   - https://github.com/fossmyanmar/docker-quick-start
   - https://devops-myanmar.gitbook.io/docker-quick-start/
+
+In next chapter, we will learn how to install docker. 
+[Install Docker](https://github.com/htetpaihtun/docker-for-my-friends/chapter-3/README.md)
+
 ---
 
