@@ -118,7 +118,7 @@ Special mentions:
   - https://devops-myanmar.gitbook.io/docker-quick-start/
 
 In next chapter, we will learn how to install docker. 
-[Install Docker](https://github.com/htetpaihtun/docker-for-my-friends/chapter-3/README.md)
+[Install Docker](https://github.com/htetpaihtun/docker-for-my-friends/tree/main/chapter-3)
 
 ---
 
