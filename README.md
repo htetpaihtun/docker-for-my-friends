@@ -11,25 +11,25 @@ Hello this is "INTRODUCTION TO DOCKER FOR MY FRIENDS".
 
 This is my take on docker after learning containerization technology for a year so I may not be very experienced and "all knowing" around docker but hey, here's my 10 cents for those people like me who wants to learn docker from absolute beginner perspective. :)
 
-Also I will add some additional information about best practices, my own practices and things to aware while getting started (as I learn through) for using docker to its potential.
+Also I will add some additional information about best practices, 
+my own practices and things to aware while getting started (as I learn through) for using docker to its potential.
 This course will cover all you need to know and all you might want to know about Docker.
 Enjoy.. 
 
-<!-- 
 In this course, you will learn;
 - Overview of Containerization technologies and the evolution of software virtaulization.
 - Architecture and concepts of Docker.
 - Installing docker.
 - How to build, run and maintain images and containers.
-- Running multi-containers with Docker-compose and Docker stack. 
+- Running multi-containers with Docker-compose
+- Building production-grade applicataions with Docker stack. 
 - Hands-on examples and best practices.
- -->
 
 ## Contents: 
 
-## Chapter 1 	[Introduction to Containerization](https://github.com/htetpaihtun/docker-for-my-friends/tree/main/chapter-1#hello-in-this-chapter-we-will-start-our-first-step-into-application-containerization-journey-i-will-try-to-explain-how-containers-came-in-in-the-first-place)
+## Chapter 1 	[Introduction to Containerization](https://github.com/htetpaihtun/docker-for-my-friends/tree/main/chapter-1)
 
-## Chapter 2 	[Docker Overview](https://github.com/htetpaihtun/docker-for-my-friends/tree/main/chapter-2#in-this-chapter-you-will-learn-background-of-dockerinc-and-your-brief-answers-to-your-very-first-questions-about-docker-starting-with-why-docker-what-docker-how-docker-and-more) 
+## Chapter 2 	[Docker Overview](https://github.com/htetpaihtun/docker-for-my-friends/tree/main/chapter-2) 
 
  	2.1---- Why Docker
 	2.2---- Docker,Inc.
@@ -38,7 +38,7 @@ In this course, you will learn;
 	2.3.2-- The Docker Daemon
 	2.3.3-- The Orchestrator (Docker swarm) 
 	
-## Chapter 3 	Installing docker 	
+## Chapter 3 	[Installing docker](https://github.com/htetpaihtun/docker-for-my-friends/blob/main/chapter-7/README.md) 	
 
 	3.1---- Installing docker on linux
 	3.2---- Installing docker on Mac/Windows
@@ -72,7 +72,7 @@ In this course, you will learn;
 	4.7.1-- The Container Network Model (CNM)
 	4.7.2-- Network Drivers
 	
-## Chapter 5 	Hands-on with docker 		
+## Chapter 5 	[Hands-on with docker](https://github.com/htetpaihtun/docker-for-my-friends/blob/main/chapter-5/README.md)		
 	
 	5.1---- Hacking Docker CLI
 	5.2---- Containerization your application 
@@ -98,7 +98,7 @@ In this course, you will learn;
 	5.5---- Docker Build
 	5.5.1-- Multi-stage Build
 	
-## Chapter 6    Multi-containers with Docker Compose
+## Chapter 6    [Multi-containers with Docker Compose](https://github.com/htetpaihtun/docker-for-my-friends/blob/main/chapter-6/README.md)
 
 	6.1---- Docker Compose
 	6.2---- Running Multi-containers Applications
@@ -110,7 +110,7 @@ In this course, you will learn;
 	6.6---- Managing Applications with Docker Compose
 	6.7---- Lab Session
 	
-## Chapter 7 	Docker Swarm with Docker Stack
+## Chapter 7 	[Docker Swarm with Docker Stack](https://github.com/htetpaihtun/docker-for-my-friends/blob/main/chapter-7/README.md) 
 
 	7.1---- Docker Swarm
 	7.1.1-- Docker Swarm Features
