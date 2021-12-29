@@ -3,7 +3,7 @@ But first, we need to master `docker cli`.
 
 ### 5.1 Hacking Docker CLI 
 
-When you are new to docker nad just started using docker to do something, we should always do 2 things; 
+If you are new to docker and just started using docker to do something, we should always do 2 things; 
 - `docker help` and 
 - [Docker documentaion](https://docs.docker.com/) 
 
