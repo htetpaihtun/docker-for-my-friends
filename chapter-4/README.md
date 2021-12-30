@@ -966,6 +966,8 @@ Like I said before, we don't do configuration to containers directly.
 We rather destroy it and then create new container with different configuration from either different or same image.
 It's called immutablity of containers. 
 
+---
+
 #### 4.6.2 Persistent Storage
 
 So, if needed, containers need to persist the application's data elsewhere. 
@@ -1149,6 +1151,9 @@ docker run -dit -p 8080:81 \
 ````
 - In first volume mount, we will overwrite default.conf file with out own default.conf file from host system.
 - In second volume mount, we will added our own my-index.html and pass to nginx.
+
+*We overwrite default.conf with our own default.conf to demonstrate its nautre. 
+But in real world, you would rather add new configuration files to the nginx configuration folder. (for virutal hosting web apps)*
 
 Now, we know how to talk to containers via storage.
 
