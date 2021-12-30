@@ -603,6 +603,137 @@ temp?
 ````
 ---
 
+### 5.4 Docker build 
+
+The docker build command builds Docker images from a Dockerfile and a “context”. 
+
+There's alot of thing you can pass to docker build commands.
+https://docs.docker.com/engine/reference/commandline/build/
+
+But we won't be using too many of them, in most cases, we are only interested in passing build context and Dockerfile.
+
+A build’s context is the set of files located in the specified PATH or URL.
+Build context is the PATH that specifies where to find the files for the “context” of the build on the Docker daemon.
+Like we did with
+````
+docker build -t imagename .
+````
+We simply say "Docker, please build me a image from here."
+Here, `.` is the context or path to Dockerfile and all of your relative paths used inside Dockerfile will start from this point.
+
+---
+
+### Image Layer Caches
+
+In CI/CD world where release cycles are too frequent, you have to build a lot of images.
+Docker helps building process by utilising image layer caching.
+We know how images layer stack on top of each other as read-only layers. 
+Docker will only rebuild when there are changes to each layer in your build process.
+Docker will re-use exisiting layer from previous build process as long as cache-hit.
+
+The process is simply.
+Let's say you have 5 layered images that you built previously.
+But you make a change at 4th layer of the image and then you rebuild it.
+Then Docker will take previous 3 layers directly from previous build and re-write another layer on top as 4th layer.
+For 5th layer, Docker will build new layer regardless of changes made to the layer itself because images inherited filesystems from their base layer.
+
+So, it is very important to utilise image layer caching as they can reduce a lot of time building your image.
+
+Good rule of thumb is to do "what you think it's gonna change most frequently" as LAST layer (as much as you can) of the image. (like your source code)
+
+For example,
+```Dockerfile
+FROM node:latest
+WORKDIR /app
+COPY package*.json .
+RUN npm install
+COPY src .
+CMD npm run
+```
+In this case, you copied only package.json to install node dependencies, not the source code itself, because it is less likely to change than source code itself.
+Assume there's source code changes and if you were to copy whole app folder in first stage, 
+you will be repeating npm install process regardless of whether you added new packages to package.json or not.
+This matters since it will not only take your computing resource, it will take your time too.
+You can also utilise this with the combination of .dockerignore utility to ignore tracking of specific files that your application doesn't need.
+
+---
+
+#### 5.4.1 Multistage builds
+
+Another thing to notice when building images is, if your app uses build process, you can ship your final image without those build tools.
+As we said before, `COPY` instructions can copy anything from any image that is available in your system.
+We also learnt how we can use containers as complier/builder in chapter-4.
+Multistage builds are kinda combination of these 2 logic.
+
+We will build our application with 1 image. (builder image)
+Then we copy binary code from that image and ship it without builder image.
+
+Since build tools are usually huge they're not optimal for shipping. 
+This greatly reduce your final image size and also security reason by not exposing your source code.
+
+For example, we have simple go app here.
+
+In our Dockerfile,
+```Dockerfile
+FROM golang:1.17-alpine AS build
+WORKDIR /go-app
+COPY go.mod .
+COPY go.sum .
+RUN go mod tidy
+COPY . .
+RUN go build -o ./main .
+
+FROM alpine:latest
+WORKDIR /app
+COPY --from=build /go-app/main .
+EXPOSE 8080
+CMD ["./main"]
+```
+We just copied final binary file with `COPY` instruction and leave the builder image behind.
+
+Build it with 
+````
+docker build -t go-multi-stage .
+````
+and run with 
+````
+docker run -d \
+--name go-app \
+-p 8080:8080 \
+go-multi-stage
+````
+If we inspect our image with 
+````
+docker images go-multi-stage
+````
+Output will look like this;
+````
+REPOSITORY       TAG       IMAGE ID       CREATED         SIZE
+go-multi-stage   latest    a5259a38887f   2 minutes ago   11.7MB
+````
+It only has 11.7MB size even though we used `golang:1.17-alpine` image in first `FROM` instruction.
+We can also check its size with
+````
+docker images golang:1.17-alpine
+````
+Output:
+````
+REPOSITORY   TAG           IMAGE ID       CREATED       SIZE
+golang       1.17-alpine   d8bf44a3f6b4   2 weeks ago   315MB
+````
+If we do list all images with `docker images`,
+````
+REPOSITORY                                                          TAG               IMAGE ID       CREATED         SIZE
+go-multi-stage                                                      latest            a5259a38887f   5 minutes ago   11.7MB
+<none>                                                              <none>            23e3c634ddbb   5 minutes ago   321MB
+````
+We can also see extra image with <none> name and tag. 
+This is the build image we did get rid of in final image.
+
+As you can see, utilising Multi-stage build greatly reduce your final image size and therefore enhances image shipping processes.
+
+---
+
 Best practices refrences I usually look up to:
 
 https://developers.redhat.com/articles/2021/11/11/best-practices-building-images-pass-red-hat-container-certification
@@ -618,25 +749,6 @@ Building 12 factor apps with Docker: https://github.com/docker/labs/tree/master/
 Official document: https://12factor.net/
 
 ---
-
-### 5.4 Docker build 
-
-
-
-
----
-
-
----
-
-#### 5.4.1 Multistage builds
-
-
-
-
-
----
-
 
 
 
