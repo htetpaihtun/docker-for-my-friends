@@ -643,7 +643,7 @@ Let's say we don't want to run bash, instead we want to see filesystem in the co
 The Unix commands for that is `ls -a`.
 Let's see.
 ````
-docker run --it --rm --name ubuntu-ls ls -a
+docker run -it --rm --name ubuntu-ls ls -a
 ````
 - `--rm` option means clean up the container(`docker rm`) after it exited, so that we don't have messy footprints of containers histroy.
 - `ls -a` is the command we passed 
@@ -656,7 +656,7 @@ Output will be similar to:
 So far, we have been working with the containers that are running in foreground and exited after its process ends.
 Let's run a container running in backgroud.
 ````
-docker run -dit --rm --name ubuntu  
+docker run -dit --rm --name ubuntu ubuntu
 ````
 You will get prompted with container id and immediately back to your terminal. 
 This is because with `-d` option, the container runs as daemon (background process).
@@ -756,7 +756,7 @@ Under the hood, it's all about sending Linux/POSIX signals.
 
 #### 4.5.3 Restart policies 
 
-The thing about modularizing your application and running as one-of processes in container is 
+The thing about modularizing your application and running as one-off processes in container is 
 it becomes easier to track in lower level but then when you are scaling up (what you definitely want and will do in microservice architecture),
 it also becomes extremely hard to manage.
 When you are managing micro-services, it is crucial to have some sort of self-healing nature to avoid higher level complexities. 
@@ -837,7 +837,7 @@ CONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS   
 c6b38bf5a3c2   nginx     "/docker-entrypoint.…"   About a minute ago   Up 3 seconds   80/tcp    unless-stopped-nginx
 68ab3eb4c0e7   nginx     "/docker-entrypoint.…"   About a minute ago   Up 3 seconds   80/tcp    restart-always-nginx
 ````
-But, if you stop them befrorehand, 
+But, if you stop them beforehand, 
 ````
 docker stop restart-always-nginx unless-stopped-nginx
 ````
@@ -898,8 +898,8 @@ docker run -d name self-healing-server -p 8080:80 --restart unless-stopped --hea
 
 We will try to make nginx crashes.
 ````
-docker exec nginx-health-care rm /etc/nginx/conf.d/default.conf
-docker exec nginx-health-care nginx -s reload 
+docker exec self-healing-server rm /etc/nginx/conf.d/default.conf
+docker exec self-healing-server nginx -s reload 
 ````
 And let's watch it crashes and restart again.
 ````
