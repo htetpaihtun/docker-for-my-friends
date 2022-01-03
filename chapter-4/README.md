@@ -852,7 +852,6 @@ CONTAINER ID   IMAGE                                 COMMAND                  CR
 c6b38bf5a3c2   nginx                                 "/docker-entrypoint.…"   2 minutes ago   Exited (0) 42 seconds ago             unless-stopped-nginx
 68ab3eb4c0e7   nginx                                 "/docker-entrypoint.…"   2 minutes ago   Up 19 seconds               80/tcp    restart-always-nginx
 ````
-You can see that only unless-stopped-nginx has been restarted. 
 
 ---
 
