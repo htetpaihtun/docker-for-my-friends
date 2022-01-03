@@ -643,7 +643,7 @@ Let's say we don't want to run bash, instead we want to see filesystem in the co
 The Unix commands for that is `ls -a`.
 Let's see.
 ````
-docker run -it --rm --name ubuntu-ls ls -a
+docker run -it --rm --name ubuntu-ls ubuntu ls -a
 ````
 - `--rm` option means clean up the container(`docker rm`) after it exited, so that we don't have messy footprints of containers histroy.
 - `ls -a` is the command we passed 
