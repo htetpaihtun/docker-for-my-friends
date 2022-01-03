@@ -894,7 +894,7 @@ Now, let's try to create a nginx-server with it's own self-healing mechanism.
 ````
 docker run -d name self-healing-server -p 8080:80 --restart unless-stopped --health-cmd "curl localhost:80 || nginx -s stop" nginx 
 ````
-- `curl localhost:80 || nginx -s stop` says try connect to localhost:80, if fails, stop the nginx service(which is PID in our case).
+- `curl localhost:80 || nginx -s stop` says try connect to localhost:80, if fails, stop the nginx service(which is PID 1 in our case).
 
 We will try to make nginx crashes.
 ````
