@@ -3,7 +3,7 @@
 ## This whole content is still under development and the contents will not be fully available yet. Also won't be accepting/reviewing any pull request right now. 
 ## Please consider coming back later. Thanks for visiting. :) 
 
-For Discord channel and class info, you can contact me at htetpaingez@gamil.com or on [facebook](www.facebook.com/htetpaihtun.12345678910).
+For Discord channel info, you can contact me at htetpaingez@gamil.com or on [facebook](www.facebook.com/htetpaihtun.12345678910).
 
 Teaching docker to my friends. (:
 
