@@ -133,7 +133,7 @@ go run /my-go-app/server.go
 ````
 Then, you can point your browser to `localhost:8090` or `curl localhost:8090` and see it is working fine.
 
-But we don't want to manually start a container by manually doing ports mapping, volume mapping, attaching to network everytime we want to run.  
+But we don't want to manually start a container by manually doing ports exposing, volume mapping and setting entry points.  
 We want our container to actually start from pre-built docker image.
 
 ---
@@ -144,11 +144,10 @@ A Dockerfile is a text document that contains all the commands a user could call
 Using `docker build`, users can create an automated build that executes several command-line instructions in succession. 
 
 Dockerfile is said to be a starting point of the image and it should specify all the requirements of the image/app.
-This will include;
+This should include;
 - the image filesystem (dependencies, volume mounts and application code itself)
-- how to start running our application (entry points and run commands) 
+- how to start running our application (port exposing, entry points and run commands) 
 - how the application should behave (healthcheck and restart policies)
-- where to run our application (port binding, service exposing)
 - some additional metadata (labels and maintainer)
 
 Dockerfile gives birth to your application image and therefore, quality of your image/app varies greatly based on Dockerfile.
@@ -160,13 +159,17 @@ so that you can ship images around swiftly.
 But there's argument saying sometimes rich-feature images/containers are better overall.
 So, we also need to maintain necessary (or potentially important) features untouched while reducing it's image size.
 
-Dockerfile contains INSTRUCTIONS and METADATA for our images.
-- INSTRUCTIONS are the ones that add extra layers on top of other images since they manipulate with our image filesystem. 
+Dockerfile contains instructions for our images.
+There are kinds those manipulate filesystem and those doesn't and just provide metadata. 
+- First ones add extra layers on top of other images since they manipulate with our image filesystem. 
 (We learnt about docker images' filesystem nature in previous chapter). 
 You will see them adding extra layer per instruction directly with `docker inspect --format "{{.RootFS.Layers}}"` command.
-- METADATA are the ones that defines how our appilcation should be started and running and exited 
-and also provides additional information about our images. 
-These kind doesn't directly add layers to our images but you can see that took place with `docker history` command.
+- Second ones defines our appilcation should be started and running and exited 
+and also provides additional data about our images. 
+These kinds doesn't directly add layers to our images but you can see that took place with `docker history` command.
+
+Also Dockerfile is helpful in self-documenting since Dockerfile provides overview information over our application.
+It's very easy when you are doing a lot of microservices since Dockerfiles are easy to read and understand.
 
 Let's dive further..
 
@@ -182,7 +185,7 @@ The base image that you choose affects the versatility, security, and efficiency
 
 You can use `FROM` instrcution with any image you like as long as it is pullable via Container Registry or locally available.
 
-You will always want to use just possibly smallest image just enough to run out application. 
+You will always want to use just possibly smallest image just enough to run our application. 
 
 Let's create a Docker image with base ubuntu image. 
 In `Dockerfile`, 
@@ -195,17 +198,17 @@ If you want to specify other registry, you can use something like this :
 ```Dockerfile
 FROM registry.access.redhat.com/ubi8/ubi:8.1
 ```
-Defining exact image tag and registry provides your app more stablity.
-When using 'latest' tag, if provider releases another version with latest tag, you will have to pull that image and 
-this is not optimal for image layer caching which we will talk about in later sections.
+Defining exact image tag and registry provides your application more stablity.
+When using 'latest' tag, if provider releases another version with latest tag, docker will pull that image and 
+will sometimes makes your application mulfunction and unstable.
 Also, you should always visit respective image's Docker hub page or the official documentation page. 
 
-We will talk about `docker build` in details, in next section but first, let's build with `docker build` command,
+We will talk about `docker build` in details, in next section, but first, let's build with `docker build` command,
 ````
 docker build -t my-image . 
 ````
 - `-t` defines image tag in format 'image:tag', we can obmit 'tag' part if we want (default is latest).
-- `.` is location to your Dockerfile.
+- `.` is 'build-context', we will revisit about this but for now regard it as location to your Dockerfile.
 
 Let's see with `docker images`
 ````
@@ -221,7 +224,8 @@ This is because we didn't add any other instructions in Dockerfile and
 Docker will treat this image the same as our original docker image which is 'ubuntu:20.04' in my case.
 You can also investigate with `docker image inspect` and such, as we've already learnt.
 
-You can see `FROM scratch` with says 'let's build from scratch'.
+We can also build a new image without using base image from scratch.
+`FROM scratch` says 'let's build from scratch'.
 Example: [Ubuntu 20.04 image's Dockerfile](https://github.com/tianon/docker-brew-ubuntu-core/blob/bf61e139e84e04f9d87fff5dc588a3f0398da627/focal/Dockerfile)
 
 You can have more than one `FROM` instructions in your Dockerfile.
@@ -239,44 +243,44 @@ Untagged: my-image:latest
 Because of the nature of docker image layering, deleting the image will not result in deleting its base image.
 In our case, we didn't modify anything, we just simply re-tag it.
 
-**Reminder**: Creating new images will not create whole new image stack, 
-but rathers writes on top of the existing image (that image can also have multiple layers on its own stack).
-In other words, it will not inheritates it but rather depends on it. 
+**Reminder**: If we have shared layers underneath, creating new images will not create whole new image stack from start 
+but rathers writes on top of the existing image.
+In other words, it will not inheritates it but rather depends on it.
 and tag it as whole new image.
 
 ---
 
 #### 5.3.2 ARG Instruction
 
-`ARG` instructions are used together with `FROM` instructions.
+`ARG` instructions let you define build-time arguments.
+`ARG` instructions are usually used together with `FROM` instructions.
 `FROM` instructions support variables that are declared by any `ARG` instructions that occur before the first FROM.
 For example, you can do something like this in our `Dockerfile`:
 ```Dockerfile
 ARG VERSION=20.04
 FROM ubuntu:$VERSION
 ```
-Note: An `ARG` declared before a `FROM` is outside of a build stage, so it can’t be used in any instruction after a `FROM` instruction.
-
 ---
 
 #### 5.3.3 RUN Instruction 
 
 The RUN instruction will execute any commands in a new layer on top of the current image and commit the results. 
 The resulting committed image will be used for the next step in the Dockerfile.
-This is one of the INSTRUCTION types that adds extra layers , since we manipulate the base image's filesystem and enviornment.
+This is one of the instruction types that adds extra layers, since we manipulate the base image's filesystem and enviornment.
 Let's include something like this in our `Dockerfile`:
 ```Dockerfile
 ARG VERSION=20.04
-FROM ubuntu:$version
+FROM ubuntu:$VERSION
 ARG VERSION
-RUN echo $version > image_version
+RUN echo $VERSION > image_version
 ```
-- `echo $version > image_version` command writes `$version` to `image_version` file.
-- `ARG VERSION` is added to demonstrate how `ARG defined before `FROM` instruction can't further be used in later instruction.
+- `echo $version > image_version` command writes `$VERSION` to `image_version` file.
+
+Note : First argument we defined exists outside first FROM instruction. So, if we want to carry it over we need to define again. 
 
 Build it with `docker build -t my-image .` 
 Run with `docker run -it my-image cat image_version`.
-Output : `latest`
+Output : `20.04`
 
 `RUN` has two from 
 - Shell form : the form we used in previous example. Format : `RUN <command>`. 
@@ -296,9 +300,11 @@ RUN [["/bin/bash", "-c", "echo", $PWD ]
 The RUN instruction will execute any commands in a new layer on top of the current image and commit the results. 
 The resulting committed image will be used for the next step in the Dockerfile.
 
-Layering RUN instructions and generating commits conforms to the core concepts of Docker where commits are cheap and containers can be created from any point in an image’s history, much like source control. To simply, it add extra layer on stack and you can track and use it later. 
+Layering RUN instructions and generating commits conforms to the core concepts of Docker 
+where commits are cheap and containers can be created from any point in an image’s history, much like source control. 
+To simply, it add extra layer on stack and you can track and use it later. 
 
-Since `CMD` adds extra layers to your image, you might want to reduce `CMD` instructions as much as possible.
+Since `RUN` adds extra layers to your image, you might want to reduce `RUN` instructions as much as possible.
 You might want to do something like this most of the time;
 ```Dockerfile
 RUN apk update ; apk upgrade  
@@ -313,7 +319,7 @@ apk upgrade
 #### 5.3.4 CMD Instruction
 
 `CMD` instructions are similar to `RUN` but the difference is they don't immediately run during build stage and doesn't add extra image layer on top.
-The main purpose of `CMD` is to provide defaults for an executing container. 
+The main purpose of `CMD` is to provide default command for an executing container. 
 These defaults can include an executable, or they can omit the executable, in which case you must specify an `ENTRYPOINT` instruction as well.			
 Like `RUN` instructions, `CMD` instructions also have shell form and exec form.
 
@@ -364,7 +370,7 @@ You can specify whether the port listens on TCP or UDP, and the default is TCP i
 The EXPOSE instruction does not actually publish the port. 
 It functions as a type of documentation between the person who builds the image and the person who runs the container, 
 about which ports are intended to be published. 
-To actually publish the port when running the container, 
+To actually publish the port when running the container (i.e. at run time), 
 use the -p flag on docker run to publish and map one or more ports, 
 or the -P flag to publish all exposed ports and map them to high-order ports.
 
@@ -393,7 +399,7 @@ FROM ubuntu:$version
 ENV FOO="BAR"
 CMD echo $FOO
 ```
-Difference between `ARG`and `ENV` is that `ARG` **will not persist** in its final image.
+Difference between `ARG`and `ENV` is that `ARG` exists at build time only.
 
 ---
 	
